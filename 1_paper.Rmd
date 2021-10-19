@@ -38,4 +38,9 @@ figure_1
 ```
 
 
+```{r}
+figure_video
+```
+
+
 # Discussion

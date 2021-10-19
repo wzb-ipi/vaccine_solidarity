@@ -116,6 +116,11 @@ covariate_names_2 <- var_list_2$new_name[var_list_2$covariate==1]
 
 ```
 
+## Prep wave 2 data
+
+```{r}
+source("prep_w2.R")
+```
 
 ```{r}
 
@@ -254,6 +259,59 @@ lm_robust(log(cash+1) ~ trading_factor*risk_factor+ round, fixed_effects = ~id, 
 main_results %>% 
   kbl(digit =2) %>%
   kable_minimal()
+```
+
+
+## Experiment
+
+```{r}
+outcomes <- c("solidarity_bahaviour", "solidarity_attitude")
+outcome_labels <- c("Solidarity Bahaviour", "Solidarity Attitude")
+treatments <- c("treatment_video")
+treatment_labels <- c("Treatment")
+```
+
+
+```{r, results = "asis"}
+#r, child = "2_main_results.Rmd", eval = TRUE}
+# put in separate files later
+stargazer::stargazer(
+  lm(solidarity_bahaviour ~ treatment_video, data = df_2), 
+  lm(solidarity_attitude ~ treatment_video, data = df_2), 
+  header = FALSE, type = "latex")
+
+models_basic <- lapply(c(outcomes), function(y)
+lm_robust(as.formula(paste(y, "~",   paste(treatments, collapse =  "+"))), data = df_2))
+names(models_basic) <- outcomes
+
+
+figure_video <- 
+  lapply(models_basic, tidy) %>% bind_rows(.id = "outcome") %>%
+  dplyr::filter(term != "(Intercept)") %>%
+  mutate(outcome = factor(outcome, outcomes, outcome_labels)) %>% 
+  ggplot(aes(estimate, outcome)) + geom_point() +
+  #facet_grid(~outcome) +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high), position = position_dodge(width = 0.3), width = .1)+
+  theme_bw()+
+  #ylab("Change in support for regime (0-1)") +
+    geom_vline(xintercept=0, linetype="longdash", lwd=0.35, size=0.75,alpha=0.3, colour = "#B55555")  +
+    xlab("") + ylab("")  +
+    theme(#panel.grid.major = element_blank(),
+          #panel.grid.minor = element_blank(),
+          #panel.background = element_blank(),
+          #strip.background = element_blank(),
+          # strip.text.y = element_blank(),
+          #axis.text.y=element_blank(),
+          legend.position = "top",
+          text = element_text(size=20),
+          legend.title=element_blank(),
+          strip.text.y = element_text(angle = 180),
+          axis.ticks.y=element_blank()) +
+    scale_color_grey()
+
+
+figure_video
+
 ```
 
 ## Save workspace
