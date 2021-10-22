@@ -132,7 +132,21 @@ labs <- var_label(w4) %>% unlist
 
 # View(w4)
 
-vign_values <- read_dta("1_input/W4_exp8_vignettes_universe_-_20210825.dta")
+# creating vignettes
+
+vign_values <- 
+  expand.grid(trading_importance=0:1,risk=0:1,deal=0:4) %>% 
+  arrange(trading_importance,risk) %>% 
+  set_value_labels(trading_importance=c('Control: Wirtschaft bleibt unberührt'=0,
+                                        'Treatment: Wirtschaft schrumpft um 5%'=1),
+                   risk=c('Control: Kein Risiko durch Mutationen'=0,
+                          'Treatment: Erhöhtes Risiko durch Mutationen'=1),
+                   deal=c('Control: kein Abkommen'=0,
+                          'Treatment: Abkommen, 20 Länder, 20 Milliarden'=1,
+                          'Treatment: Abkommen, 40 Länder, 20 Milliarden'=2,
+                          'Treatment: Abkommen, 20 Länder, 40 Milliarden'=3,
+                          'Treatment: Abkommen, 40 Länder, 40 Milliarden'=4)) %>%
+  mutate(vignr=1:20) %>% as_tibble()
 
 df <- 
   list(
