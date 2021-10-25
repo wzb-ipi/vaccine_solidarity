@@ -1,5 +1,5 @@
 ---
-title: "Paper: Solidarity and Performance Voting'"
+title: "Paper: Vaccine Solidarity"
 author:
  - Heike Klüver, Humboldt
  - Felix Hartmann, Humboldt
@@ -41,6 +41,44 @@ figure_1
 ```{r}
 figure_video
 ```
+
+
+In our pre-analysis plan we stipulated a model in which citizens place a value on own contributions $x_i$, given contributions by others $n \overline{x}_{-i}$. Their utility reflects gains from total contributions, which reflect both altruism and risks,  costs of own contributions. and costs of deviation from a norm of giving in line with contributions by others.
+
+Unfortunately the  imprecision on our estimates of responses to contributions by others prevents us from generating reliable estimates from this model. To see this consider a simplification in which utility is given by:
+
+$$u_i = (\alpha + \beta Z_1 + \delta Z_2) \left(n_{-i}\overline{x}_{-i} + x_i\right) - x_i^2 - \gamma(x_i-\overline{x}_{-i})^2$$
+
+<!-- Then first order conditions are:  -->
+
+<!-- $$(\alpha_i + \beta Z_1 + \delta Z_2)  - 2x_i - 2\gamma(x_i-\overline{x}_{-i})=0$$ -->
+<!-- <!-- $$(\alpha_i + \beta_i Z_1 + \delta Z_2)/2 +\gamma \delta\overline{x}_{-i} = x_i(1+\gamma)$$ --> -->
+
+Optimal contributions are then given by:
+
+$$x_i^* = \frac{\alpha_i}{1+\gamma} + \frac{\beta}{2+2\gamma} Z_1 + \frac{\delta}{2+2\gamma}Z_2 +\frac{\gamma}{1+\gamma}\overline{x}_{-i}$$
+
+The parameters here can be estimated with ordinary least squares. However imprecision on estimates of the effect of actions by others produces still greater uncertainty over $\gamma$ which in turn propogates to all other parameters.\footnote{The model in the pre-analysis plan has utility:
+
+$$(\alpha_i + \beta_i Z_1 + \delta Z_2) \log\left(\sum_j x_j\right) - x_i^2 - \gamma(x_i-\kappa\overline{x}_{-i})^2$$
+
+which in turn implies optimal contributions given by:
+
+% $$(\alpha_i + \beta_i Z_1 + \delta Z_2) \log\left(n_{-i}\overline{x}_{-i} + x_i\right) - x_i^2 - \gamma(x_i-\kappa\overline{x}_{-i})^2$$
+
+% First order conditions are:
+
+% $$\frac{\alpha_i + \beta_i Z_1 + \delta Z_2}{n_{-i}\overline{x}_{-i} + x_i} - 2x_i - 2\gamma(x_i-\kappa\overline{x}_{-i}) = 0$$
+% $$\frac{\alpha_i + \beta_i Z_1 + \delta Z_2}{n_{-i}\overline{x}_{-i} + x_i} = 2x_i + 2\gamma(x_i-\kappa\overline{x}_{-i})$$
+% $$2x_i(1+\gamma)(n_{-i}\overline{x}_{-i} + x_i) - 2\gamma(\kappa\overline{x}_{-i})(n_{-i}\overline{x}_{-i} + x_i) - \alpha_i - \beta_i Z_1 - \delta Z_2 = 0$$
+% $$2(1+\gamma)x_i^2 + 2x_i((1+\gamma)(n_{-i}\overline{x}_{-i})-\gamma(\kappa\overline{x}_{-i})) - 2\gamma\kappa n_{-i}\overline{x}_{-i}^2 - \alpha_i - \beta_i Z_1 - \delta Z_2 = 0$$
+
+% $$2(1+\gamma)x_i^2 + 2x_i(n_{-i} +\gamma(n_{-i}-\kappa))\overline{x}_{-i} - 2\gamma\kappa n_{-i}\overline{x}_{-i}^2 - \alpha_i - \beta_i Z_1 - \delta Z_2 = 0$$
+% $$(1+\gamma)x_i^2 + x_i(n_{-i} +\gamma(n_{-i}-\kappa))\overline{x}_{-i} - (\gamma\kappa n_{-i}\overline{x}_{-i}^2 +(\alpha_i + \beta_i Z_1 + \delta Z_2)/2) = 0$$
+
+% With solution:
+
+$$x_i^* = \frac{-(n_{-i} +\gamma(n_{-i}-\kappa))\overline{x}_{-i}+\sqrt{((n_{-i} +\gamma(n_{-i}-\kappa))\overline{x}_{-i})^2 + 4(1+\gamma)(\gamma\kappa n_{-i}\overline{x}_{-i}^2 +(\alpha_i + \beta_i Z_1 + \delta Z_2)/2)}}{2(1+\gamma)}$$ We see again that $\gamma$ appears in the denominator. }
 
 
 # Discussion
