@@ -1,0 +1,292 @@
+---
+title: "Paper: Solidarity and Performance Voting'"
+author:
+ - Heike Klüver, Humboldt
+ - Felix Hartmann, Humboldt
+ - Macartan Humphreys, WZB and Columbia
+ - Ferdinand Geißler, Humboldt
+ - Johannes Giesecke, Humboldt
+date: "May 2021"
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 2
+    self_contained: yes
+    code_folding: hide
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+    toc_depth: '2'
+keywords: vaccine hesitancy, covid, transaction costs
+theme: null
+abstract: "Respondents support high levels of cash and vaccine transfers to help poorer nations. They are more supportive when health and economic risks of failing to provide support are high; but for the most part support does not depend on these calculations. Preferences over German policy are largely independent of what other countries are doing. Median support for vaccines (90 million) and cash (2 billion) corresponds closely to actual  (100 million doses and 2.2 billion cash)."
+bibliography: references.bib  
+editor_options:
+  chunk_output_type: console
+---
+
+
+# Setup
+
+```{r setup, echo=TRUE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, comment=NA)
+options(qwraps2_markup = "markdown")
+
+## Packages
+if (!require(pacman)) install.packages("pacman")
+
+pacman::p_load(
+  ggridges,    # plot
+  cregg,       # conjoint
+  readxl,      # read excel
+  gtrendsR,    # google trends
+  aod,         # hypothesis testing (1.3.1)
+  car,         # linear hypothesis testing for causal tree (3.0-2)
+  corrplot,    # Correlations (0.84)
+  DeclareDesign, 
+  dplyr,       # Data manipulation (0.8.0.1)
+  evtree,      # evolutionary learning of globally optimal trees (1.0-7)
+  fastDummies,
+  fBasics,     # Summary statistics (3042.89)
+  ggplot2,
+  grf,         # Generalized random forests (0.10.2)
+  haven,       # load sav
+  kableExtra,  # Prettier RMarkdown (1.0.1)
+  knitr,
+  labelled,
+  psych,       # Correlation p-values (1.8.12)
+  purrr,
+  rpart,       # Classification and regression trees, or CART (4.1-13)
+  reshape2,
+  rpart.plot,  # Plotting trees (3.0.6)
+  readr,       # Reading csv files (1.3.1)
+  sjlabelled,
+  stats,
+  summarytools,
+  texreg,
+  tidyverse,
+  tidyselect,
+  tidyr,       # Database operations (0.8.3)
+  treeClust,   # Predicting leaf position for causal trees (1.1-7)
+  tibble)      # Modern alternative to data frames (2.1.1)
+
+
+# Set seed for reproducibility
+set.seed(201911) 
+
+```
+
+
+```{r}
+
+main_df<-read_csv('1_input/combined.csv')
+
+w4 <- main_df %>% dplyr::filter(wave==4)
+
+# labs <- var_label(w4) %>% unlist
+# data.frame(names(labs), labs) %>% kable()
+
+# creating vignettes
+
+vign_values <- 
+  expand.grid(trading_importance=0:1,risk=0:1,deal=0:4) %>% 
+  arrange(trading_importance,risk) %>% 
+  set_value_labels(trading_importance=c('Control: Wirtschaft bleibt unberührt'=0,
+                                        'Treatment: Wirtschaft schrumpft um 5%'=1),
+                   risk=c('Control: Kein Risiko durch Mutationen'=0,
+                          'Treatment: Erhöhtes Risiko durch Mutationen'=1),
+                   deal=c('Control: kein Abkommen'=0,
+                          'Treatment: Abkommen, 20 Länder, 20 Milliarden'=1,
+                          'Treatment: Abkommen, 40 Länder, 20 Milliarden'=2,
+                          'Treatment: Abkommen, 20 Länder, 40 Milliarden'=3,
+                          'Treatment: Abkommen, 40 Länder, 40 Milliarden'=4)) %>%
+  mutate(vignr=1:20) %>% as_tibble()
+
+df <- 
+  list(
+    w4 %>%
+      mutate(vignr = as.numeric(c_0037)) %>% left_join(vign_values) %>%
+      mutate(round = 1,
+         cash = 	exp7_money1,
+         doses = exp7_doses1) %>%
+      select(group, round, cash, doses, trading_importance, risk, deal, ID),
+    
+    w4 %>%
+      mutate(vignr = as.numeric(c_0038)) %>% left_join(vign_values) %>%
+      mutate(round = 2,
+         cash = 	exp7_money2,
+         doses = exp7_doses2) %>%
+      select(group, round, cash, doses, trading_importance, risk, deal, ID)) %>% 
+  bind_rows %>%
+  dplyr::filter(group !=4) %>% 
+  mutate(id = ID,
+         others_number = (deal==1 | deal == 3)*2 + (deal==2 | deal == 4)*4,
+         others_giving = (deal==1 | deal == 2)*2 + (deal==3 | deal == 4)*4,
+         risk_factor = factor(risk, 0:1, c("Low", "High")),
+         trading_factor = factor(trading_importance, 0:1, c("Low", "High")),
+         risk = risk - mean(risk),
+         trading_importance = trading_importance - mean(trading_importance),
+         others_number = others_number - mean(others_number),
+         others_giving =others_giving - mean(others_giving))
+
+main_results <- 
+  list(
+  cash = lm_robust(cash ~ trading_importance*risk*others_number*others_giving  + round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy,
+  doses = lm_robust(doses ~ trading_importance*risk*others_number*others_giving  + round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy) %>% bind_rows()
+
+
+ treatments <- c("trading_importance", "risk", "others_number", "others_giving")
+ treatment_labels <- c("Trading importance", "Risk", "Number of others giving (10s)", "Amount given by others\n(10s of billions)")
+```
+
+# Descriptives
+
+The average proposal is: 
+`r round(mean(df$cash, na.rm = TRUE), 2)` billion Euros and 
+`r round(mean(df$doses, na.rm = TRUE), 2)` million doses. 
+
+The median proposal is: 
+`r round(median(df$cash, na.rm = TRUE), 2)` billion Euros and 
+`r round(median(df$doses, na.rm = TRUE), 2)` million doses. 
+ 
+These are close to actual [https://www.auswaertiges-amt.de/en/aussenpolitik/themen/gesundheit/covax/2396914](pledges).
+
+```{r, out.width = "50%"} 
+figure_1 <-
+  
+  main_results %>% 
+  dplyr::filter(term %in% treatments) %>% 
+  mutate(Treatment = factor(term, treatments, treatment_labels)) %>%
+  
+  ggplot(aes(estimate, Treatment)) + geom_point()+
+  geom_errorbar(aes(xmin = conf.low, xmax = conf.high), width = .1)+
+  geom_vline(xintercept=0, linetype="longdash", lwd=0.35, colour = "#B55555") + 
+  theme_bw() + facet_grid(~outcome, scales = "free_x")+
+  ylab("")
+
+
+df_mean <- df %>% 
+  group_by(risk_factor) %>% 
+  summarize(average = mean(cash, na.rm = TRUE)) %>%
+  ungroup() 
+
+figure_2 <-
+  df %>% 
+  ggplot(aes(risk_factor, cash)) + 
+  geom_boxplot() + ylab("Billions of Euros")   + xlab("Risk")  + scale_y_sqrt() +
+  geom_point(data = df_mean,
+             mapping = aes(x = risk_factor, y = average),
+             color="red") 
+
+figure_3 <-
+  df %>% 
+  ggplot(aes(risk_factor, doses)) + 
+  geom_boxplot() + ylab("Millions of doses") + xlab("Risk")
+
+
+
+figure_2
+figure_3
+```
+
+Note that the doses options was limited to between 0 and 200 m. 
+
+
+Offers are responsive to risk and economic impacts but not much to coordination cosiderations.
+
+```{r}
+
+
+figure_1
+
+```
+
+
+Trading importance and risk are substitutes for cash but not doses.
+
+Without demeaning:
+
+```{r}
+lm_robust(cash ~ trading_factor*risk_factor+ round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+```
+
+Logging helps and substitution not as strong:
+
+```{r}
+lm_robust(log(cash+1) ~ trading_factor*risk_factor+ round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+
+```
+
+## Full results from saturated models
+
+```{r}
+main_results %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+```
+
+
+## Experiment
+
+```{r}
+outcomes <- c("solidarity_bahaviour", "solidarity_attitude")
+outcome_labels <- c("Solidarity Bahaviour", "Solidarity Attitude")
+treatments <- c("treatment_video")
+treatment_labels <- c("Treatment")
+```
+
+
+```{r, results = "asis"}
+#r, child = "2_main_results.Rmd", eval = TRUE}
+# put in separate files later
+stargazer::stargazer(
+  lm(solidarity_bahaviour ~ treatment_video, data = df_2), 
+  lm(solidarity_attitude ~ treatment_video, data = df_2), 
+  header = FALSE, type = "latex")
+
+models_basic <- lapply(c(outcomes), function(y)
+lm_robust(as.formula(paste(y, "~",   paste(treatments, collapse =  "+"))), data = df_2))
+names(models_basic) <- outcomes
+
+
+figure_video <- 
+  lapply(models_basic, tidy) %>% bind_rows(.id = "outcome") %>%
+  dplyr::filter(term != "(Intercept)") %>%
+  mutate(outcome = factor(outcome, outcomes, outcome_labels)) %>% 
+  ggplot(aes(estimate, outcome)) + geom_point() +
+  #facet_grid(~outcome) +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high), position = position_dodge(width = 0.3), width = .1)+
+  theme_bw()+
+  #ylab("Change in support for regime (0-1)") +
+    geom_vline(xintercept=0, linetype="longdash", lwd=0.35, size=0.75,alpha=0.3, colour = "#B55555")  +
+    xlab("") + ylab("")  +
+    theme(#panel.grid.major = element_blank(),
+          #panel.grid.minor = element_blank(),
+          #panel.background = element_blank(),
+          #strip.background = element_blank(),
+          # strip.text.y = element_blank(),
+          #axis.text.y=element_blank(),
+          legend.position = "top",
+          text = element_text(size=20),
+          legend.title=element_blank(),
+          strip.text.y = element_text(angle = 180),
+          axis.ticks.y=element_blank()) +
+    scale_color_grey()
+
+
+figure_video
+
+```
+
+## Save workspace
+
+```{r}
+save.image("Solidarity.Rdata")
+```
