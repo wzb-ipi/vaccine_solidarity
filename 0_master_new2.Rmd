@@ -246,6 +246,16 @@ treatment_labels <- c("Treatment")
 ```{r, results = "asis"}
 #r, child = "2_main_results.Rmd", eval = TRUE}
 # put in separate files later
+
+df_2$solidarity_bahaviour %>% hist(main = "Distribution of allocations from beavioral measure")
+
+
+
+df_2 %>%
+  ggplot(aes(factor(party.id), solidarity_bahaviour )) + geom_boxplot()
+  
+  ggtitle("Distribution of allocations from beavioral measure")
+
 stargazer::stargazer(
   lm(solidarity_bahaviour ~ treatment_video, data = df_2), 
   lm(solidarity_attitude ~ treatment_video, data = df_2), 
@@ -284,6 +294,58 @@ figure_video <-
 figure_video
 
 ```
+
+## Longer term follow up
+
+
+```{r}
+
+table(df$ID %in% df_2$ID)
+
+df <- left_join(df, df_2 %>% dplyr::select(ID, treatment_video))
+
+lm_robust(log(cash+1) ~ trading_factor*risk_factor+ treatment_video + round,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+
+```
+
+
+## Individual solidarity
+
+Should an older Indian woman be prioritized over a young German?
+
+```{r}
+
+hist(df$solid_german_bund - df$solid_indian_bund)
+
+lm_robust(log(cash+1) ~ trading_factor*risk_factor+ treatment_video + round + solid_german_bund +solid_indian_bund,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+
+```
+
+
+## Structural
+
+
+```{r}
+structural_results <- 
+  lm_robust(cash ~ trading_importance + risk + others_average, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy 
+
+gamma <- structural_results$estimate[3] / (1- structural_results$estimate[3])
+beta  <- 2*(1+gamma)*structural_results$estimate[1]
+delta  <- 2*(1+gamma)*structural_results$estimate[2]
+
+gamma_lwr <- structural_results$conf.low[3] / (1- structural_results$conf.low[3])
+gamma_upr <- structural_results$conf.high[3] / (1- structural_results$conf.high[3])
+
+b <- seq(structural_results$conf.low[3], structural_results$conf.high[3], length = 10)
+b/(1-b)
+
+pars <- c(gamma = gamma, beta = beta, delta = delta, gamma_lwr = gamma_lwr, gamma_upr = gamma_upr)
+```
+
 
 ## Save workspace
 
