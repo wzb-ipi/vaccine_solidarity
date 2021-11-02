@@ -108,23 +108,24 @@ vign_values <-
 df <- 
   list(
     w4 %>%
-      mutate(vignr = as.numeric(c_0037)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(run1_exp8)) %>% left_join(vign_values) %>%
       mutate(round = 1,
          cash = 	exp7_money1,
          doses = exp7_doses1) %>%
-      select(group, round, cash, doses, trading_importance, risk, deal, ID),
+      select(group, round, cash, doses, trading_importance, risk, deal, ID, perspective_fed_indian, perspective_fed_german),
     
     w4 %>%
-      mutate(vignr = as.numeric(c_0038)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(run2_exp8)) %>% left_join(vign_values) %>%
       mutate(round = 2,
          cash = 	exp7_money2,
          doses = exp7_doses2) %>%
-      select(group, round, cash, doses, trading_importance, risk, deal, ID)) %>% 
+      select(group, round, cash, doses, trading_importance, risk, deal, ID, perspective_fed_indian, perspective_fed_german)) %>% 
   bind_rows %>%
-  dplyr::filter(group !=4) %>% 
+  dplyr::filter(group !=3) %>% 
   mutate(id = ID,
          others_number = (deal==1 | deal == 3)*2 + (deal==2 | deal == 4)*4,
          others_giving = (deal==1 | deal == 2)*2 + (deal==3 | deal == 4)*4,
+         others_average = others_giving/others_number, 
          risk_factor = factor(risk, 0:1, c("Low", "High")),
          trading_factor = factor(trading_importance, 0:1, c("Low", "High")),
          risk = risk - mean(risk),
@@ -317,9 +318,9 @@ Should an older Indian woman be prioritized over a young German?
 
 ```{r}
 
-hist(df$solid_german_bund - df$solid_indian_bund)
+hist(df$perspective_fed_german - df$perspective_fed_indian)
 
-lm_robust(log(cash+1) ~ trading_factor*risk_factor+ treatment_video + round + solid_german_bund +solid_indian_bund,  se_type = "stata", data = df) %>% tidy  %>% 
+lm_robust(log(cash+1) ~ trading_factor*risk_factor+ treatment_video + round + perspective_fed_german +perspective_fed_indian,  se_type = "stata", data = df) %>% tidy  %>% 
   kbl(digit =2) %>%
   kable_minimal()
 
