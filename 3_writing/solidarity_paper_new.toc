@@ -1,0 +1,7 @@
+\contentsline {section}{\numberline {1}Conclusions and implications}{10}{section.1}%
+\contentsline {section}{\numberline {A}Study Design}{2}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Outcome: Willingness to share}{2}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Outcome: Personal donation}{2}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Conjoint Design}{3}{subsection.A.3}%
+\contentsline {subsection}{\numberline {A.4}Outcomes:}{5}{subsection.A.4}%
+\contentsline {section}{\numberline {B}Descriptive Statistics}{6}{appendix.B}%
