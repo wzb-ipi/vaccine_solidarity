@@ -116,14 +116,14 @@ vign_values <-
 df <- 
   list(
     w4 %>%
-      mutate(vignr = as.numeric(exp8_run.1)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(exp8_run1)) %>% left_join(vign_values) %>%
       mutate(round = 1,
          cash = 	exp7_money1,
          doses = exp7_doses1) %>%
       select(group, round, cash, doses, trading_importance, risk, deal, ID, perspective_fed_indian, perspective_fed_german, vaccinated),
     
     w4 %>%
-      mutate(vignr = as.numeric(exp8_run.2)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(exp8_run2)) %>% left_join(vign_values) %>%
       mutate(round = 2,
          cash = 	exp7_money2,
          doses =  exp7_doses2) %>%
