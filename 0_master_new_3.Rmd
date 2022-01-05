@@ -116,14 +116,14 @@ vign_values <-
 df <- 
   list(
     w4 %>%
-      mutate(vignr = as.numeric(exp8_run.1)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(run1_exp8)) %>% left_join(vign_values) %>%
       mutate(round = 1,
          cash = 	exp7_money1,
          doses = exp7_doses1) %>%
       select(group, round, cash, doses, trading_importance, risk, deal, ID, perspective_fed_indian, perspective_fed_german, vaccinated),
     
     w4 %>%
-      mutate(vignr = as.numeric(exp8_run.2)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(run2_exp8)) %>% left_join(vign_values) %>%
       mutate(round = 2,
          cash = 	exp7_money2,
          doses =  exp7_doses2) %>%
@@ -522,27 +522,51 @@ label <- "1_input/W2_exp3_vignettes_universe.dta" %>%
 label$vig_doses %>% table()
 
 
-conjoints_long <- df_2 %>% dplyr::select(starts_with('exp3'),ID) %>%
-  apply(2,as.numeric) %>% as_tibble() %>% 
-  pivot_longer(cols = starts_with('exp3'), names_to = c('exp','number'),
-                names_sep = '\\.',
-                values_to = 'value') %>% 
-  group_by(ID) %>%
-  mutate(row = row_number()) %>% 
-  pivot_wider(names_from = 'exp',values_from = c('number','value')) %>% dplyr::select(-row)
+conjoints <- 
+  
+  list(
+    conjoint1_1 =
+      df_2 %>%
+      mutate(vignr = as.numeric(c_0031_w2),
+             outcome = conjoint_choice1_exp3, rating = conjoint_rating1_exp3, contest = 1, candidate=1) %>%
+      select(ID, vignr, outcome, rating, contest, candidate),
+    
+  conjoint1_2 =
+      df_2 %>%
+      mutate(vignr = as.numeric(c_0032_w2),
+             outcome = conjoint_choice1_exp3, rating = conjoint_rating2_exp3, contest = 1, candidate=2) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
 
-conjoints <- list(
-  cols1 = conjoints_long %>% dplyr::select(ends_with('choice')) %>% na.omit() %>% 
-  slice(rep(1:n(), each = 2)),
-  cols2 = conjoints_long %>% dplyr::select(-ends_with('choice')) %>% .[,-1] %>% apply(2,na.omit) %>% cbind() %>% 
-  apply(2,as.numeric) %>% as_tibble()
-) %>% bind_cols() %>% rename('outcome'='value_exp3_choice',
-                             'vignr'='value_exp3_vignette',
-                             'rating'='value_exp3_rating') %>%
-  mutate(contest = ifelse(number_exp3_vignette %in% c(1,2),1,
-                          ifelse(number_exp3_vignette %in% c(3,4),2,3)),
-         candidate = ifelse(number_exp3_vignette %in% c(1,3,5),1,2)) %>%
-  dplyr::select(ID, vignr, outcome, rating, contest, candidate) %>% 
+    
+  conjoint2_1 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette3),
+             outcome = conjoint_choice2_exp3, rating = conjoint_rating3_exp3, contest = 2, candidate=1) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
+
+        
+    conjoint2_2 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette4),
+             outcome = conjoint_choice2_exp3, rating = conjoint_rating4_exp3, contest = 2, candidate=2) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
+
+            
+                conjoint3_1 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette5),
+             outcome = conjoint_choice3_exp3, rating = conjoint_rating5_exp3, contest = 3, candidate=1) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
+
+                
+                    conjoint3_2 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette6),
+             outcome = conjoint_choice3_exp3, 
+             rating = conjoint_rating6_exp3, contest = 3, candidate=2) %>%
+      select(ID, vignr, outcome, rating, contest, candidate) 
+                    
+) %>% bind_rows() %>%
   mutate(outcome = ifelse(candidate ==1, as.numeric(outcome=="1"), as.numeric(outcome=="2"))) %>%
   left_join(label) %>%
   mutate(
@@ -555,7 +579,7 @@ conjoints <- list(
     economic_benefits= factor(vig_benefit_economic, 0:1, c("Without economic importance", "With economic importance")),
     health_benefits=factor(vig_benefit_health, 0:1,  
       c("No risk of infection", "Risk of infection"))) %>%
-  left_join(df_2 %>% dplyr::select(ID, treatment_video))  
+  left_join(df_2 %>% dplyr::select(ID, treatment_video)) 
 
 # Normalizae data
 # Note that mean rating is removed
