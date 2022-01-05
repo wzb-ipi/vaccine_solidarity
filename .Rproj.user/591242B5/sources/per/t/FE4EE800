@@ -3,7 +3,7 @@
     "path": "C:/Dropbox/Covid Vaccine Allocation/5_writing/Paper 5 Freedoms/1_analysis/0_master.Rmd",
     "project_path": null,
     "type": "r_markdown",
-    "hash": "2313264795",
+    "hash": "1311567399",
     "contents": "",
     "dirty": false,
     "created": 1635235205149.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "687,11",
+        "cursorPosition": "673,0",
         "scrollLine": "663"
     },
     "folds": "",
-    "lastKnownWriteTime": 1635235986,
+    "lastKnownWriteTime": 1636455169,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1635235986557,
+    "last_content_update": 1636455169,
     "read_only": false,
     "read_only_alternatives": []
 }

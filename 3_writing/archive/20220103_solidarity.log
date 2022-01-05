@@ -1,0 +1,1216 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7300) (preloaded format=pdflatex 2020.3.10)  3 JAN 2022 11:47
+entering extended mode
+**./20220103_solidarity.tex
+(20220103_solidarity.tex
+LaTeX2e <2020-02-02> patch level 5
+L3 programming layer <2020-03-06>
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/base\article.cls"
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/base\size12.clo"
+File: size12.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
+)
+\c@part=\count167
+\c@section=\count168
+\c@subsection=\count169
+\c@subsubsection=\count170
+\c@paragraph=\count171
+\c@subparagraph=\count172
+\c@figure=\count173
+\c@table=\count174
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen134
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/grffile\grffile.sty"
+Package: grffile 2019/11/11 v2.1 Extended file name support for graphics (legac
+y)
+Package grffile Info: This package is an empty stub for compatibility on input 
+line 40.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics\graphicx.sty"
+Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics\keyval.sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics\graphics.sty"
+Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics\trig.sty"
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics-cfg\graphics.cfg"
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 105.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics-def\pdftex.def"
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen135
+\Gin@req@width=\dimen136
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsmath\amsmath.sty"
+Package: amsmath 2020/01/20 v2.17e AMS math features
+\@mathmargin=\skip49
+
+For additional information on amsmath, use the `?' option.
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsmath\amstext.sty"
+Package: amstext 2000/06/29 v2.01 AMS text
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsmath\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks16
+\ex@=\dimen137
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsmath\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen138
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsmath\amsopn.sty"
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count175
+LaTeX Info: Redefining \frac on input line 227.
+\uproot@=\count176
+\leftroot@=\count177
+LaTeX Info: Redefining \overline on input line 389.
+\classnum@=\count178
+\DOTSCASE@=\count179
+LaTeX Info: Redefining \ldots on input line 486.
+LaTeX Info: Redefining \dots on input line 489.
+LaTeX Info: Redefining \cdots on input line 610.
+\Mathstrutbox@=\box45
+\strutbox@=\box46
+\big@size=\dimen139
+LaTeX Font Info:    Redeclaring font encoding OML on input line 733.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 734.
+\macc@depth=\count180
+\c@MaxMatrixCols=\count181
+\dotsspace@=\muskip16
+\c@parentequation=\count182
+\dspbrk@lvl=\count183
+\tag@help=\toks17
+\row@=\count184
+\column@=\count185
+\maxfields@=\count186
+\andhelp@=\toks18
+\eqnshift@=\dimen140
+\alignsep@=\dimen141
+\tagshift@=\dimen142
+\tagwidth@=\dimen143
+\totwidth@=\dimen144
+\lineht@=\dimen145
+\@envbody=\toks19
+\multlinegap=\skip50
+\multlinetaggap=\skip51
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2859.
+LaTeX Info: Redefining \] on input line 2860.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsfonts\amssymb.sty"
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsfonts\amsfonts.sty"
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/setspace\setspace.sty"
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/paralist\paralist.sty"
+Package: paralist 2017/01/22 v2.7 Extended list environments
+\pltopsep=\skip52
+\plpartopsep=\skip53
+\plitemsep=\skip54
+\plparsep=\skip55
+\pl@lab=\toks21
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/geometry\geometry.sty"
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/iftex\ifvtex.sty"
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/iftex\iftex.sty"
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+))
+\Gm@cnth=\count187
+\Gm@cntv=\count188
+\c@Gm@tempcnt=\count189
+\Gm@bindingoffset=\dimen146
+\Gm@wd@mp=\dimen147
+\Gm@odd@mp=\dimen148
+\Gm@even@mp=\dimen149
+\Gm@layoutwidth=\dimen150
+\Gm@layoutheight=\dimen151
+\Gm@layouthoffset=\dimen152
+\Gm@layoutvoffset=\dimen153
+\Gm@dimlist=\toks22
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/geometry\geometry.cfg"))
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/ctable\ctable.sty"
+Package: ctable 2015/10/17 v1.31 ctable package for flexible typesetting of tab
+le and figure floats using key/value directives
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/iftex\ifpdf.sty"
+Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/etoolbox\etoolbox.sty"
+Package: etoolbox 2019/09/21 v2.5h e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count190
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/xcolor\xcolor.sty"
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics-cfg\color.cfg"
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/xkeyval\xkeyval.sty"
+Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/xkeyval\xkeyval.tex"
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/xkeyval\xkvutils.tex"
+\XKV@toks=\toks23
+\XKV@tempa@toks=\toks24
+)
+\XKV@depth=\count191
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/tools\array.sty"
+Package: array 2019/08/31 v2.4l Tabular extension package (FMi)
+\col@sep=\dimen154
+\ar@mcellbox=\box47
+\extrarowheight=\dimen155
+\NC@list=\toks25
+\extratabsurround=\skip56
+\backup@length=\skip57
+\ar@cellbox=\box48
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/tools\tabularx.sty"
+Package: tabularx 2020/01/15 v2.11c `tabularx' package (DPC)
+\TX@col@width=\dimen156
+\TX@old@table=\dimen157
+\TX@old@col=\dimen158
+\TX@target=\dimen159
+\TX@delta=\dimen160
+\TX@cols=\count192
+\TX@ftn=\toks26
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/booktabs\booktabs.sty"
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen161
+\lightrulewidth=\dimen162
+\cmidrulewidth=\dimen163
+\belowrulesep=\dimen164
+\belowbottomsep=\dimen165
+\aboverulesep=\dimen166
+\abovetopsep=\dimen167
+\cmidrulesep=\dimen168
+\cmidrulekern=\dimen169
+\defaultaddspace=\dimen170
+\@cmidla=\count193
+\@cmidlb=\count194
+\@aboverulesep=\dimen171
+\@belowrulesep=\dimen172
+\@thisruleclass=\count195
+\@lastruleclass=\count196
+\@thisrulewidth=\dimen173
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics\rotating.sty"
+Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/base\ifthen.sty"
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count197
+\rotFPtop=\skip58
+\rotFPbot=\skip59
+\rot@float@box=\box49
+\rot@mess@toks=\toks27
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/transparent\transparent.sty"
+Package: transparent 2019/11/29 v1.4 Transparency via pdfTeX's color stack (HO)
+
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/auxhook\auxhook.sty"
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+))
+\@CTframesep=\dimen174
+\@dfltCTframesep=\dimen175
+\@CTframerule=\dimen176
+\@dfltCTframerule=\dimen177
+\@CTwidth=\dimen178
+\@dfltCTwidth=\dimen179
+\@CTcaptionskip=\dimen180
+\@dfltCTcaptionskip=\dimen181
+\@CTmaxwidth=\dimen182
+\@dfltCTmaxwidth=\dimen183
+\@CTmincapwidth=\dimen184
+\@dfltCTmincapwidth=\dimen185
+\@CTfooterwidth=\dimen186
+\@dfltCTfooterwidth=\dimen187
+\@CTw=\dimen188
+\@CTfloatwidth=\dimen189
+\@CToldsep=\dimen190
+\@CToldrule=\dimen191
+\CT@t=\box50
+\@CTcurftwidth=\dimen192
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/graphics\lscape.sty"
+Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/natbib\natbib.sty"
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip60
+\bibsep=\skip61
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count198
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/caption\caption.sty"
+Package: caption 2020/05/10 v3.4j Customizing captions (AR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/caption\caption3.sty"
+Package: caption3 2020/05/10 v1.11 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 61.
+\captionmargin=\dimen193
+\captionmargin@=\dimen194
+\captionwidth=\dimen195
+\caption@tempdima=\dimen196
+\caption@indent=\dimen197
+\caption@parindent=\dimen198
+\caption@hangindent=\dimen199
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count199
+\c@continuedfloat=\count266
+Package caption Info: rotating package is loaded.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/hyphenat\hyphenat.sty"
+Package: hyphenat 2009/09/02 v2.3c hyphenation utilities
+\langwohyphens=\language78
+LaTeX Info: Redefining \_ on input line 43.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/appendix\appendix.sty"
+Package: appendix 2020/02/08 v1.2c extra appendix facilities
+\c@@pps=\count267
+\c@@ppsavesec=\count268
+\c@@ppsaveapp=\count269
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/parskip\parskip.sty"
+Package: parskip 2020-01-22 v2.0d non-zero parskip adjustments
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/kvoptions\kvoptions.sty"
+Package: kvoptions 2019/11/29 v3.13 Key value format for package options (HO)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/ltxcmds\ltxcmds.sty"
+Package: ltxcmds 2019/12/15 v1.24 LaTeX kernel commands for general use (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/kvsetkeys\kvsetkeys.sty"
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+)))
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/hyperref\hyperref.sty"
+Package: hyperref 2020/01/14 v7.00d Hypertext links for LaTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/pdftexcmds\pdftexcmds.sty"
+Package: pdftexcmds 2019/11/24 v0.31 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/infwarerr\infwarerr.sty"
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/kvdefinekeys\kvdefinekeys.sty"
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/pdfescape\pdfescape.sty"
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/hycolor\hycolor.sty"
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/letltxmacro\letltxmacro.sty"
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+)
+\@linkdim=\dimen256
+\Hy@linkcounter=\count270
+\Hy@pagecounter=\count271
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/hyperref\pd1enc.def"
+File: pd1enc.def 2020/01/14 v7.00d Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/intcalc\intcalc.sty"
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/etexcmds\etexcmds.sty"
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+\Hy@SavedSpaceFactor=\count272
+Package hyperref Info: Hyper figures OFF on input line 4547.
+Package hyperref Info: Link nesting OFF on input line 4552.
+Package hyperref Info: Hyper index ON on input line 4555.
+Package hyperref Info: Plain pages OFF on input line 4562.
+Package hyperref Info: Backreferencing OFF on input line 4567.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4800.
+\c@Hy@tempcnt=\count273
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/url\url.sty"
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5159.
+\XeTeXLinkMargin=\dimen257
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/bitset\bitset.sty"
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/bigintcalc\bigintcalc.sty"
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count274
+\Field@Width=\dimen258
+\Fld@charsize=\dimen259
+Package hyperref Info: Hyper figures OFF on input line 6430.
+Package hyperref Info: Link nesting OFF on input line 6435.
+Package hyperref Info: Hyper index ON on input line 6438.
+Package hyperref Info: backreferencing OFF on input line 6445.
+Package hyperref Info: Link coloring OFF on input line 6450.
+Package hyperref Info: Link coloring with OCG OFF on input line 6455.
+Package hyperref Info: PDF/A mode OFF on input line 6460.
+LaTeX Info: Redefining \ref on input line 6500.
+LaTeX Info: Redefining \pageref on input line 6504.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/atbegshi\atbegshi.sty"
+Package: atbegshi 2019/12/05 v1.19 At begin shipout hook (HO)
+)
+\Hy@abspage=\count275
+\c@Item=\count276
+\c@Hfootnote=\count277
+)
+Package hyperref Info: Driver: hpdftex.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/hyperref\hpdftex.def"
+File: hpdftex.def 2020/01/14 v7.00d Hyperref driver for pdfTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/atveryend\atveryend.sty"
+Package: atveryend 2019-12-11 v1.11 Hooks at the very end of document (HO)
+)
+\Fld@listcount=\count278
+\c@bookmark@seq@number=\count279
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/rerunfilecheck\rerunfilecheck.sty
+"
+Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/uniquecounter\uniquecounter.sty
+"
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+86.
+)
+\Hy@SectionHShift=\skip62
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/psnfss\helvet.sty"
+Package: helvet 2005/04/12 PSNFSS-v9.2a (WaS) 
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/eurosym\eurosym.sty"
+Package: eurosym 1998/08/06 v1.1 European currency symbol ``Euro''
+\@eurobox=\box51
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/tools\dcolumn.sty"
+Package: dcolumn 2014/10/28 v1.06 decimal alignment package (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/tools\longtable.sty"
+Package: longtable 2020/01/07 v4.13 Multi-page Table package (DPC)
+\LTleft=\skip63
+\LTright=\skip64
+\LTpre=\skip65
+\LTpost=\skip66
+\LTchunksize=\count280
+\LTcapwidth=\dimen260
+\LT@head=\box52
+\LT@firsthead=\box53
+\LT@foot=\box54
+\LT@lastfoot=\box55
+\LT@cols=\count281
+\LT@rows=\count282
+\c@LT@tables=\count283
+\c@LT@chunks=\count284
+\LT@p@ftn=\toks28
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/float\float.sty"
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count285
+\float@exts=\toks29
+\float@box=\box56
+\@float@everytoks=\toks30
+\@floatcapt=\box57
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/caption\subcaption.sty"
+Package: subcaption 2020/01/22 v1.3d Sub-captions (AR)
+\c@subfigure=\count286
+\c@subtable=\count287
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/placeins\placeins.sty"
+Package: placeins 2005/04/18  v 2.2
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/base\inputenc.sty"
+Package: inputenc 2018/08/11 v1.3c Input encoding file
+\inpenc@prehook=\toks31
+\inpenc@posthook=\toks32
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\fourier.sty"
+Package: fourier 2020/03/03 2.2 fourier-GUTenberg package
+Now handling font encoding FML ...
+... no UTF-8 mapping file for font encoding FML
+Now handling font encoding FMS ...
+... no UTF-8 mapping file for font encoding FMS
+Now handling font encoding FMX ...
+... no UTF-8 mapping file for font encoding FMX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/base\fontenc.sty"
+Package: fontenc 2020/02/11 v2.0o Standard LaTeX package
+LaTeX Font Info:    Trying to load font information for T1+futs on input line 1
+12.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\t1futs.fd"
+File: t1futs.fd 2004/03/02 Fontinst v1.926 font definitions for T1/futs.
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/base\textcomp.sty"
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\fourier-orns.sty"
+Package: fourier-orns 2020/03/03 2.2 fourier-ornaments package
+)
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 63.
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `normal' on input line 63.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> T1/futs/m/n on input line 63.
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `bold' on input line 63.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> T1/futs/m/n on input line 63.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  T1/futs/m/n --> T1/futs/b/n on input line 64.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 72.
+LaTeX Font Info:    Encoding `OML' has changed to `FML' for symbol font
+(Font)              `letters' in the math version `normal' on input line 72.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> FML/futmi/m/it on input line 72.
+LaTeX Font Info:    Encoding `OML' has changed to `FML' for symbol font
+(Font)              `letters' in the math version `bold' on input line 72.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> FML/futmi/m/it on input line 72.
+\symotherletters=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  FML/futmi/m/it --> FML/futmi/b/it on input line 74.
+LaTeX Font Info:    Overwriting symbol font `otherletters' in version `bold'
+(Font)                  FML/futm/m/it --> FML/futm/b/it on input line 75.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 76.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 77.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 79.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 80.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 81.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 82.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 83.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 84.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 85.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 86.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 126.
+LaTeX Font Info:    Encoding `OMS' has changed to `FMS' for symbol font
+(Font)              `symbols' in the math version `normal' on input line 126.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> FMS/futm/m/n on input line 126.
+LaTeX Font Info:    Encoding `OMS' has changed to `FMS' for symbol font
+(Font)              `symbols' in the math version `bold' on input line 126.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> FMS/futm/m/n on input line 126.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 127.
+LaTeX Font Info:    Encoding `OMX' has changed to `FMX' for symbol font
+(Font)              `largesymbols' in the math version `normal' on input line 1
+27.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> FMX/futm/m/n on input line 127.
+LaTeX Font Info:    Encoding `OMX' has changed to `FMX' for symbol font
+(Font)              `largesymbols' in the math version `bold' on input line 127
+.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> FMX/futm/m/n on input line 127.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 128.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> T1/futs/bx/n on input line 128.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> T1/futs/bx/n on input line 128.
+LaTeX Font Info:    Redeclaring math alphabet \mathrm on input line 129.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 130.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> T1/futs/m/it on input line 130.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> T1/futs/m/it on input line 130.
+LaTeX Font Info:    Redeclaring math alphabet \mathcal on input line 131.
+LaTeX Font Info:    Redeclaring math symbol \varkappa on input line 132.
+LaTeX Font Info:    Redeclaring math symbol \leqslant on input line 138.
+LaTeX Font Info:    Redeclaring math symbol \geqslant on input line 139.
+LaTeX Font Info:    Redeclaring math symbol \vDash on input line 142.
+LaTeX Font Info:    Redeclaring math symbol \blacktriangleleft on input line 14
+3.
+LaTeX Font Info:    Redeclaring math symbol \blacktriangleright on input line 1
+44.
+LaTeX Font Info:    Redeclaring math symbol \nleqslant on input line 145.
+LaTeX Font Info:    Redeclaring math symbol \ngeqslant on input line 146.
+LaTeX Font Info:    Redeclaring math symbol \parallel on input line 147.
+LaTeX Font Info:    Redeclaring math symbol \nparallel on input line 148.
+LaTeX Font Info:    Redeclaring math symbol \nvDash on input line 150.
+LaTeX Font Info:    Redeclaring math symbol \intercal on input line 151.
+LaTeX Font Info:    Redeclaring math symbol \hslash on input line 152.
+LaTeX Font Info:    Redeclaring math symbol \nexists on input line 153.
+LaTeX Font Info:    Redeclaring math symbol \complement on input line 154.
+LaTeX Font Info:    Redeclaring math symbol \varsubsetneq on input line 155.
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 161.
+LaTeX Font Info:    Redeclaring math symbol \smallsetminus on input line 162.
+LaTeX Font Info:    Redeclaring math symbol \subsetneqq on input line 163.
+LaTeX Font Info:    Redeclaring math symbol \rightrightarrows on input line 164
+.
+LaTeX Font Info:    Redeclaring math symbol \leftleftarrows on input line 165.
+LaTeX Font Info:    Redeclaring math symbol \square on input line 166.
+LaTeX Font Info:    Redeclaring math symbol \curvearrowleft on input line 167.
+LaTeX Font Info:    Redeclaring math symbol \curvearrowright on input line 168.
+
+LaTeX Font Info:    Redeclaring math symbol \blacksquare on input line 169.
+LaTeX Font Info:    Redeclaring math symbol \varkappa on input line 199.
+LaTeX Font Info:    Redeclaring math symbol \varvarrho on input line 200.
+LaTeX Font Info:    Redeclaring math delimiter \Vert on input line 223.
+LaTeX Font Info:    Redeclaring math delimiter \vert on input line 228.
+LaTeX Font Info:    Redeclaring math delimiter \lvert on input line 230.
+LaTeX Font Info:    Redeclaring math delimiter \rvert on input line 232.
+LaTeX Font Info:    Redeclaring math delimiter \lVert on input line 234.
+LaTeX Font Info:    Redeclaring math delimiter \rVert on input line 236.
+LaTeX Font Info:    Redeclaring math delimiter \Downarrow on input line 238.
+LaTeX Font Info:    Redeclaring math delimiter \backslash on input line 240.
+LaTeX Font Info:    Redeclaring math delimiter \rangle on input line 242.
+LaTeX Font Info:    Redeclaring math delimiter \langle on input line 244.
+LaTeX Font Info:    Redeclaring math delimiter \rbrace on input line 246.
+LaTeX Font Info:    Redeclaring math delimiter \lbrace on input line 248.
+LaTeX Font Info:    Redeclaring math delimiter \rceil on input line 250.
+LaTeX Font Info:    Redeclaring math delimiter \lceil on input line 252.
+LaTeX Font Info:    Redeclaring math delimiter \rfloor on input line 254.
+LaTeX Font Info:    Redeclaring math delimiter \lfloor on input line 256.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 260.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 261.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 262.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 263.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 264.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 265.
+LaTeX Font Info:    Redeclaring math accent \check on input line 266.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 267.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 268.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 269.
+\symUfutm=\mathgroup7
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/makecell\makecell.sty"
+Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
+\rotheadsize=\dimen261
+\c@nlinenum=\count288
+\TeXr@lab=\toks33
+)
+Package hyperref Info: Option `pageanchor' set `true' on input line 57.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/l3backend\l3backend-pdfmode.def"
+File: l3backend-pdfmode.def 2020-02-23 L3 backend support: PDF mode
+\l__kernel_color_stack_int=\count289
+\l__pdf_internal_box=\box58
+) (20220103_solidarity.aux)
+\openout1 = `20220103_solidarity.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 58.
+LaTeX Font Info:    Trying to load font information for FML+futm on input line 
+58.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\fmlfutm.fd"
+File: fmlfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futm.
+)
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 58.
+LaTeX Font Info:    Trying to load font information for FMS+futm on input line 
+58.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\fmsfutm.fd"
+File: fmsfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FMS/futm.
+)
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 58.
+LaTeX Font Info:    Trying to load font information for FMX+futm on input line 
+58.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\fmxfutm.fd"
+File: fmxfutm.fd futm-extension
+)
+LaTeX Font Info:    ... okay on input line 58.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/context/base/mkii\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count290
+\scratchdimen=\dimen262
+\scratchbox=\box59
+\nofMPsegments=\count291
+\nofMParguments=\count292
+\everyMPshowfont=\toks34
+\MPscratchCnt=\count293
+\MPscratchDim=\dimen263
+\MPnumerator=\count294
+\makeMPintoPDFobject=\count295
+\everyMPtoPDFconversion=\toks35
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/epstopdf-pkg\epstopdf-base.sty"
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.2698pt, 452.96826pt, 72.2698pt)
+* v-part:(T,H,B)=(72.2698pt, 700.50723pt, 72.2698pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=452.96826pt
+* \textheight=700.50723pt
+* \oddsidemargin=-0.00018pt
+* \evensidemargin=-0.00018pt
+* \topmargin=-37.00018pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=14.22636pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: longtable package is loaded.
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/caption\ltcaption.sty"
+Package: ltcaption 2018/08/26 v1.4a longtable captions (AR)
+)
+Package caption Info: End \AtBeginDocument code.
+\AtBeginShipoutBox=\box60
+Package hyperref Info: Link coloring OFF on input line 58.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/hyperref\nameref.sty"
+Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/refcount\refcount.sty"
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex/generic/gettitlestring\gettitlestring.s
+ty"
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count296
+)
+LaTeX Info: Redefining \ref on input line 58.
+LaTeX Info: Redefining \pageref on input line 58.
+LaTeX Info: Redefining \nameref on input line 58.
+ (20220103_solidarity.out) (20220103_solidarity.out)
+\@outlinefile=\write3
+\openout3 = `20220103_solidarity.out'.
+
+LaTeX Font Info:    Redeclaring math accent \widehat on input line 58.
+LaTeX Font Info:    Redeclaring math accent \widetilde on input line 58.
+LaTeX Font Info:    Trying to load font information for FML+futmi on input line
+ 69.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\fmlfutmi.fd"
+File: fmlfutmi.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futmi.
+)
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 22.88956pt on input line 69.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 15.89755pt on input line 69.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 11.03998pt on input line 69.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 69.
+
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 69.
+
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 22.88956pt on input line 69.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 15.89755pt on input line 69.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 11.03998pt on input line 69.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 9.19998pt on input line 69.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 6.99199pt on input line 69.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 5.51999pt on input line 69.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 9.19998pt on input line 69.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 6.99199pt on input line 69.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 5.51999pt on input line 69.
+Package textcomp Info: Symbol \textasciiacute not provided by
+(textcomp)             font family futs in TS1 encoding.
+(textcomp)             Default family used instead on input line 69.
+
+! Undefined control sequence.
+l.92 \normal
+            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (3.1312pt too wide) in paragraph at lines 91--94
+\T1/futs/m/n/12 needed for a suc-cess-ful global cam-paign. Pub-lic pref-er-enc
+es are in part ex-plained by strate-gic
+ []
+
+
+Overfull \hbox (5.49516pt too wide) in paragraph at lines 91--94
+\T1/futs/m/n/12 con-sid-er-a-tions, but are pri-mar-ily based on hu-man-i-tar-i
+an con-cerns. The de-sign of mul-ti-lat-eral
+ []
+
+[1
+
+{C:/Users/humphreys/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 8.27998pt on input line 109.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 6.43999pt on input line 109.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 8.27998pt on input line 109.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 6.43999pt on input line 109.
+
+Overfull \hbox (1.19522pt too wide) in paragraph at lines 108--110
+\T1/futs/m/n/12 de-vel-oped in record time and more than 7 bil-lion doses bil-l
+ion doses have been ad-min-is-tered
+ []
+
+
+Overfull \hbox (7.32724pt too wide) in paragraph at lines 108--110
+\T1/futs/m/n/12 vac-ci-na-tion cam-paign, less than 1% of the pop-u-la-tion is 
+vac-ci-nated in the ten least per-form-ing
+ []
+
+
+Overfull \hbox (15.00713pt too wide) in paragraph at lines 113--114
+\T1/futs/m/n/12 ([]Eg-ger et al.[], []2021[]), the un-equal pro-vi-sion of vac-
+cines has im-por-tant con-se-quences for wealth-ier
+ []
+
+LaTeX Font Info:    Trying to load font information for TS1+futs on input line 
+117.
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/fourier\ts1futs.fd"
+File: ts1futs.fd 2003/09/14 Fontinst v1.801 font definitions for TS1/futs.
+)
+Overfull \hbox (7.74661pt too wide) in paragraph at lines 117--118
+[]\T1/futs/m/n/12 Researchers at the In-ter-na-tional Mon-e-tary Fund (IMF) es-
+ti-mate the costs of global vac-ci-na-tion
+ []
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.122 
+       [1]
+Overfull \hbox (6.99115pt too wide) in paragraph at lines 125--126
+\T1/futs/m/n/12 the lev-els and drivers of pub-lic sup-port for global vac-cine
+ shar-ing and to iden-tify ways through
+ []
+
+
+Overfull \hbox (14.39113pt too wide) in paragraph at lines 134--135
+\T1/futs/m/n/12 es-ti-mated con-tri-bu-tions needed to fund global vac-cine re-
+dis-tri-bu-tion; though av-er-age amounts
+ []
+
+[2]
+Overfull \hbox (4.13518pt too wide) in paragraph at lines 139--140
+[]\T1/futs/m/n/12 Overall the stark in-equal-i-ties in global vac-cine dis-tri-
+bu-tion are not in line with pub-lic opin-ion.
+ []
+
+
+Overfull \hbox (11.81514pt too wide) in paragraph at lines 139--140
+\T1/futs/m/n/12 study have im-por-tant im-pli-ca-tions for the cur-rent pub-lic
+ de-bate on global vac-cine dis-tri-bu-tion,
+ []
+
+
+Overfull \hbox (3.86319pt too wide) in paragraph at lines 150--151
+\T1/futs/m/n/12 provider  Re-spondi  . All anal-y-ses were spec-i-fied in a pre
+-reg-is-tered anal-y-sis plan made avail-able
+ []
+
+
+Overfull \hbox (35.83513pt too wide) in paragraph at lines 150--151
+\T1/futs/m/n/12 at Humboldt-Universit‰t zu Berlin (HU-KSBF-EK$[]$2021$[]$0010 a
+nd HU-KSBF-EK$[]$2021$[]$0019).[][][] 
+ []
+
+
+Overfull \hbox (4.30717pt too wide) in paragraph at lines 155--156
+\T1/futs/m/n/12 coun-tries par-tic-i-pat-ing, con-tri-bu-tion of other coun-tri
+es). Re-spon-dents were asked to in-di-cate
+ []
+
+
+Overfull \hbox (19.49518pt too wide) in paragraph at lines 155--156
+\T1/futs/m/n/12 how much Ger-many should con-tribute to global vac-cine shar-in
+g in these hy-po-thet-i-cal sce-nar-ios,
+ []
+
+[3]
+Overfull \hbox (17.97128pt too wide) in paragraph at lines 159--160
+[]\T1/futs/m/n/12 More specif-i-cally, two di-men-sions fo-cused on the ben-e-f
+its of global vac-cine shar-ing for Ger-many
+ []
+
+
+Overfull \hbox (9.97919pt too wide) in paragraph at lines 159--160
+\T1/futs/m/n/12 imag-ine that "The risk of new mu-ta-tions of the coro-n-avirus
+ in-creases con-sid-er-ably in Ger-many
+ []
+
+
+Overfull \hbox (16.26718pt too wide) in paragraph at lines 163--164
+[]\T1/futs/m/n/12 The other two di-men-sions fo-cused on the na-ture of mul-ti-
+lat-eral agree-ments, ask-ing par-tic-i-pants
+ []
+
+
+Overfull \hbox (7.7992pt too wide) in paragraph at lines 184--186
+\T1/futs/m/n/12 closely in line with ac-tual cur-rent Ger-man com-mit-ments. Th
+ere is con-sid-er-able het-ero-gene-ity,
+ []
+
+
+Overfull \hbox (33.28651pt too wide) in paragraph at lines 184--186
+\T1/futs/m/n/12 how-ever, with about one third sup-port com-mit-ments around \T
+S1/futs/m/n/12 ø\T1/futs/m/n/12 5 bn or more. A small share---around
+ []
+
+[4]
+<../2_output/cumulative.pdf, id=128, 722.7pt x 433.62pt>
+File: ../2_output/cumulative.pdf Graphic file (type pdf)
+<use ../2_output/cumulative.pdf>
+Package pdftex.def Info: ../2_output/cumulative.pdf  used on input line 193.
+(pdftex.def)             Requested size: 452.96826pt x 271.77934pt.
+
+Overfull \hbox (8.75514pt too wide) in paragraph at lines 201--202
+\T1/futs/m/n/12 sup-port suc-cess-ful ini-tia-tives with-out bench-mark-ing to 
+av-er-age con-tri-bu-tions by oth-ers. 
+ []
+
+<../2_output/E1_main.pdf, id=131, 433.62pt x 216.81pt>
+File: ../2_output/E1_main.pdf Graphic file (type pdf)
+<use ../2_output/E1_main.pdf>
+Package pdftex.def Info: ../2_output/E1_main.pdf  used on input line 204.
+(pdftex.def)             Requested size: 452.96826pt x 226.49602pt.
+[5 <../2_output/cumulative.pdf>]
+Overfull \hbox (1.8192pt too wide) in paragraph at lines 214--215
+\T1/futs/m/n/12 Overall our find-ings sug-gest high lev-els of sup-port for con
+-tri-bu-tions to ad-dress global vac-cine
+ []
+
+
+Overfull \hbox (3.85913pt too wide) in paragraph at lines 214--215
+\T1/futs/m/n/12 in-equity that stem from \T1/futs/m/it/12 both \T1/futs/m/n/12 
+hu-man-i-tar-ian ra-tio-nales and, less force-fully, strate-gic ra-tio-nales.
+ []
+
+
+Overfull \hbox (6.97925pt too wide) in paragraph at lines 218--219
+\T1/futs/m/n/12 health or eco-nomic ben-e-fits stipulated---as ev-i-dence of no
+n-strategic hu-man-i-tar-ian con-cerns.
+ []
+
+
+Overfull \hbox (13.4872pt too wide) in paragraph at lines 218--219
+\T1/futs/m/n/12 The com-par-i-son di-rectly pits na-tion-al-ist con-cerns again
+st hu-man-i-tar-ian con-cerns. Im-por-tantly
+ []
+
+
+Overfull \hbox (11.08719pt too wide) in paragraph at lines 222--223
+\T1/futs/m/n/12 form-ing if vac-cines are not made avail-able in de-vel-op-ing 
+coun-tries. Sub-se-quently, re-spon-dents
+ []
+
+
+Overfull \hbox (21.5111pt too wide) in paragraph at lines 222--223
+\T1/futs/m/n/12 were asked whether they sup-port the in-ter-na-tional dis-tri-b
+u-tion of vac-cines (at-ti-tu-di-nal out-come)
+ []
+
+[6 <../2_output/E1_main.pdf>]
+Overfull \hbox (14.03517pt too wide) in paragraph at lines 226--227
+[]\T1/futs/m/n/12 We find that re-spon-dents in the treat-ment group that were 
+ex-posed to the video are sig-nif-i-cantly
+ []
+
+
+Overfull \hbox (7.9511pt too wide) in paragraph at lines 226--227
+\T1/futs/m/n/12 more likely to show sol-i-dar-ity both with re-gard to the at-t
+i-tu-di-nal and the be-havioural out-come.
+ []
+
+
+Overfull \hbox (9.53853pt too wide) in paragraph at lines 235--236
+\T1/futs/m/n/12 sol-i-dar-ity in the COVID pan-demic. With re-gard to the in-st
+ru-ments of achiev-ing a fair al-lo-ca-tion
+ []
+
+
+Overfull \hbox (7.67516pt too wide) in paragraph at lines 235--236
+\T1/futs/m/n/12 do-na-tions (around 100 mil-lion doses) is likely sub-stan-tive
+ly smaller than the me-dian pre-ferred
+ []
+
+
+Overfull \hbox (22.92712pt too wide) in paragraph at lines 235--236
+\T1/futs/m/n/12 in-equal-ity in-clud-ing strate-gies that tar-get pro-duc-tion 
+in de-vel-op-ing coun-tries, through fi-nanc-ing,
+ []
+
+[7]
+Overfull \hbox (4.5831pt too wide) in paragraph at lines 239--240
+\T1/futs/m/n/12 fur-ther-more sug-gests that this is not due to lack of pub-lic
+ sup-port for the propo-si-tion. Av-er-age
+ []
+
+
+Overfull \hbox (4.74718pt too wide) in paragraph at lines 239--240
+\T1/futs/m/n/12 the chal-lenge of achiev-ing global vac-ci-na-tion will have th
+e moral sup-port of the pub-lic be-hind
+ []
+
+[8] (20220103_solidarity.bbl [9]
+Underfull \hbox (badness 1515) in paragraph at lines 69--73
+[]\T1/futs/m/n/12 Kuhn, Theresa, Francesco Nicoli and Frank Van-den-broucke. 20
+20.  ``Pref-er-ences for
+ []
+
+) [10] (20220103_solidarity.toc)
+\tf@toc=\write4
+\openout4 = `20220103_solidarity.toc'.
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.269 \clearpage
+                 [1
+
+]
+Overfull \hbox (1.94867pt too wide) in paragraph at lines 278--280
+[]\T1/futs/m/n/12 The fol-low-ing is about vac-ci-na-tion progress in Ger-many 
+and the rest of the world. 
+ []
+
+
+Overfull \hbox (19.94867pt too wide) in paragraph at lines 283--289
+[]\T1/futs/m/n/12 The vac-ci-na-tion cam-paign against the coro-n-avirus in Ger
+-many is now well ad-vanced
+ []
+
+
+Overfull \hbox (8.15666pt too wide) in paragraph at lines 283--289
+\T1/futs/m/n/12 booster vac-ci-na-tion are cur-rently be-ing dis-cussed. In con
+-trast, many other, poorer
+ []
+
+
+Overfull \hbox (7.2086pt too wide) in paragraph at lines 292--298
+\T1/futs/m/n/12 around the world who are ready to vac-ci-nate. Al-though the pr
+o-duc-tion of vac-cines
+ []
+
+
+Overfull \hbox (8.94594pt too wide) in paragraph at lines 308--311
+[]\T1/futs/m/n/12 0 Con-trol: It has no neg-a-tive im-pact on the Ger-man econ-
+omy if there are no vac-ci-na-tions
+ []
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.332 	0
+         Control: There is no international deal on the global distribution
+[2
+
+]
+Overfull \hbox (10.72192pt too wide) in paragraph at lines 347--350
+[]\T1/futs/m/n/12 4 There is an in-ter-na-tional deal on the global dis-tri-bu-
+tion of vac-cines to poorer coun-tries.
+ []
+
+
+Overfull \hbox (70.70174pt too wide) in paragraph at lines 365--367
+\T1/futs/m/n/12 Each sub-ject sees two con-di-tions, pro-duc-ing a to-tal of $2
+0 \FMS/futm/m/n/12  \T1/futs/m/n/12 19 \FMS/futm/m/n/12 Å \T1/futs/m/n/12 380$
+ ver-sions, as-signed in-de-pen-dently. 
+ []
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.3}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.381 	
+        [3]
+Overfull \hbox (1.90463pt too wide) in paragraph at lines 382--386
+\T1/futs/m/n/12 con-tribute to this fund for global vac-ci-na-tion. (Op-tions r
+ange from 0 to 70 bil-lion;
+ []
+
+
+Overfull \hbox (7.66066pt too wide) in paragraph at lines 405--409
+[]\T1/futs/m/n/12 For each of the two sce-nar-ios, please in-di-cate what pro-p
+or-tion of these 200 mil-lion
+ []
+
+<../Figures/Experiment_8.png, id=199, 1189.44376pt x 1370.11874pt>
+File: ../Figures/Experiment_8.png Graphic file (type png)
+<use ../Figures/Experiment_8.png>
+Package pdftex.def Info: ../Figures/Experiment_8.png  used on input line 421.
+(pdftex.def)             Requested size: 452.96826pt x 521.75858pt.
+pdfTeX warning (ext4): destination with the same identifier (name{page.4}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.430 \clearpage
+                 [4]pdfTeX warning (ext4): destination with the same identifier
+ (name{page.5}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.430 \clearpage
+                 [5 <../Figures/Experiment_8.png>]
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 4
+46.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex/latex/base\t1cmtt.fd"
+File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+Overfull \hbox (13.33925pt too wide) in paragraph at lines 450--452
+\T1/futs/b/n/12 Attitudinal out-come\T1/futs/m/n/12 : Would you be will-ing to 
+per-son-ally sup-port the in-ter-na-tional dis-tri-bu-tion
+ []
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.6}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.473   P
+         lease select how the additional Mingle points should be allocated to
+[6
+
+]pdfTeX warning (ext4): destination with the same identifier (name{page.7}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.521 \clearpage
+                 [7]
+<2_figures/fig_video.png, id=222, 1349.04pt x 963.6pt>
+File: 2_figures/fig_video.png Graphic file (type png)
+<use 2_figures/fig_video.png>
+Package pdftex.def Info: 2_figures/fig_video.png  used on input line 527.
+(pdftex.def)             Requested size: 452.96826pt x 323.54684pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 534.
+pdfTeX warning (ext4): destination with the same identifier (name{page.8}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.534 \end{document}
+                     [8
+
+ <./2_figures/fig_video.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 534.
+ (20220103_solidarity.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 534.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 534.
+Package rerunfilecheck Info: File `20220103_solidarity.out' has not changed.
+(rerunfilecheck)             Checksum: CD8BB2CF6CBE45CABECDE6963EC4790E;466.
+ ) 
+Here is how much of TeX's memory you used:
+ 11257 strings out of 480934
+ 166316 string characters out of 2906880
+ 441363 words of memory out of 3000000
+ 26772 multiletter control sequences out of 15000+200000
+ 621313 words of font info for 123 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 55i,9n,96p,1347b,430s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\humphreys\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi
+600\ectt1200.pk>
+!pdfTeX error: pdflatex.exe (file futb8r): Font futb8r at 795 not found
+ ==> Fatal error occurred, no output PDF file produced!

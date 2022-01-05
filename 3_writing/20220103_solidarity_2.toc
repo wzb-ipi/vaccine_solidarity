@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}Design}{3}{section.2}%
+\contentsline {section}{\numberline {3}Results}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Levels of support for vaccine solidarity}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Treatment effects}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Structural analysis}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Discussion}{5}{section.4}%
+\contentsline {section}{\numberline {5}Conclusions}{6}{section.5}%
+\contentsline {section}{\numberline {A}Experiment Design}{2}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Assignment}{2}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Outcomes}{3}{subsection.A.2}%
+\contentsline {section}{\numberline {B}Information Experiment Design}{5}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Outcome: Willingness to share}{5}{subsection.B.1}%
+\contentsline {subsection}{\numberline {B.2}Outcome: Personal donation}{5}{subsection.B.2}%
+\contentsline {section}{\numberline {C}Information experiment results}{6}{appendix.C}%
+\contentsline {section}{\numberline {D}Pre-registered subgroup analyses}{7}{appendix.D}%

@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: solidarity_paper_new.aux
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Reallocating 'name_of_file' (item size: 1) to 5 items.
+The style file: apsr.bst
+Database file #1: solidarity.bib
+Warning--I didn't find a database entry for "athey2019generalized"
+You've used 11 entries,
+            2874 wiz_defined-function locations,
+            721 strings with 6825 characters,
+and the built_in function-call counts, 53449 in all, are:
+= -- 8796
+> -- 678
+< -- 0
++ -- 4178
+- -- 235
+* -- 4618
+:= -- 10634
+add.period$ -- 44
+call.type$ -- 11
+change.case$ -- 144
+chr.to.int$ -- 11
+cite$ -- 11
+duplicate$ -- 170
+empty$ -- 383
+format.name$ -- 237
+if$ -- 9620
+int.to.chr$ -- 5
+int.to.str$ -- 0
+missing$ -- 10
+newline$ -- 47
+num.names$ -- 138
+pop$ -- 33
+preamble$ -- 1
+purify$ -- 165
+quote$ -- 0
+skip$ -- 160
+stack$ -- 0
+substring$ -- 12466
+swap$ -- 30
+text.length$ -- 154
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 44
+warning$ -- 0
+while$ -- 272
+width$ -- 0
+write$ -- 154
+(There was 1 warning)

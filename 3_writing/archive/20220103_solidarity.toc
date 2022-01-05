@@ -1,0 +1,7 @@
+\contentsline {section}{\numberline {A}Conjoint Experiment Design}{2}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Assignment}{3}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Outcomes}{3}{subsection.A.2}%
+\contentsline {section}{\numberline {B}Information Experiment Design}{6}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Outcome: Willingness to share}{6}{subsection.B.1}%
+\contentsline {subsection}{\numberline {B.2}Outcome: Personal donation}{6}{subsection.B.2}%
+\contentsline {section}{\numberline {C}Information experiment results}{8}{appendix.C}%
