@@ -1,0 +1,822 @@
+---
+title: "Case selection strategies"
+author: "M"
+date: "12/6/2020"
+output: 
+  html_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+
+# devtools::install_github("macartan/CQtools" ,auth_token = "1d86aef4d13da82cf2c7dbf3a4381a05ab1f7883" )
+# R_BUILD_TAR=tar
+knitr::opts_chunk$set(echo = TRUE)
+library(CausalQueries)
+library(CQtools)
+library(tidyverse)
+library(knitr)
+options(mc.cores = parallel::detectCores())
+run <- FALSE
+run_selection_1 <- FALSE
+run_selection_2 <- FALSE
+simulation_diagnosis <- FALSE
+path <- "wide_deep"
+```
+
+# Helpers
+
+```{r}
+weighted.var <- function(x, w = rep(1, length(x))) {
+  # No degrees of freedom adjustment as we are dealing with population
+    if(length(x)==1) return(0)
+    if(all(is.na(x))) return(NA)
+    w <- w/sum(w)
+    sum(w*(x - sum(w*x))^2)
+}
+
+p_M <- function(model)
+  model$stan_objects$w_full %>% data.frame %>%
+    rename(
+      X0M0Y0 = contains("X0") & contains("Y0") & contains("M0"),
+      X0M1Y0 = contains("X0") & contains("Y0") & contains("M1"),
+      X0M0Y1 = contains("X0") & contains("Y1") & contains("M0"),
+      X0M1Y1 = contains("X0") & contains("Y1") & contains("M1"),
+      X1M0Y0 = contains("X1") & contains("Y0") & contains("M0"),
+      X1M1Y0 = contains("X1") & contains("Y0") & contains("M1"),
+      X1M0Y1 = contains("X1") & contains("Y1") & contains("M0"),
+      X1M1Y1 = contains("X1") & contains("Y1") & contains("M1")) %>% 
+    transmute(
+      p_M_00 = X0M1Y0/(X0M0Y0+X0M1Y0),
+      p_M_01 = X0M1Y1/(X0M0Y1+X0M1Y1),
+      p_M_10 = X1M1Y0/(X1M0Y0+X1M1Y0),
+      p_M_11 = X1M1Y1/(X1M0Y1+X1M1Y1))
+  
+caseload <- function(expanded_df)
+  expanded_df %>% filter(!is.na(M)) %>% 
+  mutate(type = paste0("p_M_", X,Y)) %>%
+  group_by(type) %>%
+  summarize(n = n(), m = sum(M))
+
+prob_df <- function(df, model){
+  expanded_df <- expand_data(df, model)
+  cases <- caseload(expanded_df)
+  probs <- p_M(model)
+  
+  # If no data on M
+  if(mean(!is.na(expanded_df$M))==0) return(1)
+  
+  # Get binomial probability for each cell
+  ps <- lapply(cases$type, function(cell) {
+    n <- cases %>% filter(type == cell) %>% pull(n)
+    m <- cases %>% filter(type == cell) %>% pull(m)
+    dbinom(m, n, probs[[cell]])    
+  })
+  
+  # Take mean of product
+  Reduce(f = "*", ps) %>% mean
+  }
+
+# Get a compact data from a possible data list
+grab_data <- function(possible_data, j) 
+  possible_data %>% select(event, strategy, j+2) %>% rename(count = 3)
+
+
+data_description <- function(d)
+  filter(d, !is.na(M)) %>% 
+  mutate(type = paste0(M, "|",X,Y)) %>% pull(type) %>% 
+  paste(collapse = ", ") 
+
+
+# Add empty XMY rows to compact data given long XY data
+augment_observed <- function(observed, model){
+  XMY_blank <- collapse_data(data.frame(X=1, M=1, Y=1), model)
+  XMY_blank$count[8] <- 0
+  rbind(XMY_blank, collapse_data(observed, model))
+}
+
+# Update, implement queries and calculate probability of the M data
+comparisons <- function(model, data, query, given, ...) 
+  
+  query_model(
+    update_model(model, data, data_type = "compact", keep_transformed = TRUE, ...),
+    query =  query,
+    given = given,
+    using = "posteriors", 
+    case_level = FALSE, 
+    expand_grid = FALSE) %>%
+    
+    mutate(prob = prob_df(data, model),
+           data = data_description(expand_data(data, model))) 
+
+```
+
+# Model list
+
+```{r}
+model_list <- list(
+  
+chain_model = make_model("X -> M -> Y") %>% set_priors(distribution = "jeffreys") %>%
+  set_priors(node = "X", alphas = 100)  %>%
+  set_prior_distribution() %>% 
+  set_parameter_matrix(),
+
+chain_model_monotonic = make_model("X -> M -> Y") %>% set_priors(distribution = "jeffreys") %>%
+  set_restrictions("M[X=1] < M[X=0]") %>%
+  set_restrictions("(Y[M=1] < Y[M=0])") %>%
+  set_priors(node = "X", alphas = 100)  %>%
+  set_prior_distribution() %>% 
+  set_parameter_matrix(),
+
+moderator_model = make_model("X -> Y <- M") %>% 
+  set_priors(distribution = "jeffreys") %>%
+  set_priors(node = "X", alphas = 100) %>%
+  set_priors(node = "M", alphas = 100) %>%
+  set_prior_distribution() %>% set_parameter_matrix(),
+
+moderator_model_monotonic = make_model("X -> Y <- M") %>% 
+  set_priors(distribution = "jeffreys") %>%
+  set_priors(node = "X", alphas = 100) %>%
+  set_priors(node = "M", alphas = 100) %>%
+  set_restrictions("(Y[M=1] < Y[M=0])") %>%
+  set_restrictions("(Y[X=1] < Y[X=0])") %>%
+  set_prior_distribution() %>% set_parameter_matrix(),
+
+
+two_path_model = make_model("X -> M -> Y <- X") %>% 
+  set_priors(distribution = "jeffreys") %>%
+  set_priors(node = "X", alphas = 100) %>%
+  set_prior_distribution() %>% 
+  set_parameter_matrix(),
+
+two_path_model_monotonic = make_model("X -> M -> Y <- X") %>%
+  set_priors(distribution = "jeffreys") %>%
+  set_priors(node = "X", alphas = 100) %>%
+  set_restrictions("(M[X=1] < M[X=0])") %>%
+  set_restrictions("(Y[M=1] < Y[M=0])") %>%
+  set_restrictions("(Y[X=1] < Y[X=0])") %>%
+  set_prior_distribution() %>% 
+  set_parameter_matrix(),
+
+two_path_half_chain = make_model("X -> M -> Y <- X") %>%
+  set_priors(alpha = 1) %>%
+  set_priors(node = "X", alphas = 100) %>%
+  set_priors(statement = "(Y[X=1, M = 0] != Y[X=0, M = 0]) | (Y[X=1, M = 1] != Y[X=0, M = 1])", 
+             alpha = .25)   %>% 
+  set_parameters(param_type = "prior_mean") %>%
+  set_prior_distribution() %>% set_parameter_matrix(),
+
+confounded_model = make_model("M -> X -> Y <- M") %>% 
+  set_priors(distribution = "jeffreys") %>%
+  set_priors(node = "X", alphas = 100) %>%
+  set_prior_distribution() %>% 
+  set_parameter_matrix(),
+
+confounded_model_monotonic = make_model("M -> X -> Y <- M") %>%
+  set_priors(distribution = "jeffreys") %>%
+  set_priors(node = "M", alphas = 100) %>%
+  set_restrictions("(X[M=1] < X[M=0])") %>%
+  set_restrictions("(Y[M=1] < Y[M=0])") %>%
+  set_restrictions("(Y[X=1] < Y[X=0])") %>%
+  set_prior_distribution() %>% 
+  set_parameter_matrix()
+
+)
+```
+
+# Queries
+
+```{r}
+query <- list(
+  ATE    = "Y[X=1] - Y[X=0]", 
+  PC_11  = "Y[X=1] - Y[X=0]", 
+  PC_01  = "Y[X=1] - Y[X=0]",
+  via_M  =  "Y[X=0, M=M[X=1]]==Y[X=1, M=M[X=1]]",
+  DIR_M1 = "Y[X=1, M=1] - Y[X=0, M=1]", 
+  DIR_M0 = "Y[X=1, M=0] - Y[X=0, M=0]", 
+  IND_X1 = "Y[X=1, M=M[X=1]] - Y[X=1, M=M[X=0]]",  
+  IND_X0 = "Y[X=0, M=M[X=1]] - Y[X=0, M=M[X=0]]", 
+  M1     = "M==1", 
+  ATE_XM = "M[X=1] - M[X=0]",
+  ATE_MY = "Y[M=1] - Y[M=0]")
+
+given <- c(
+  TRUE,
+  "X == 1 & Y == 1",  
+  "X == 0 & Y == 1", 
+  "(X == 1 & Y == 1) & (Y[X=1]>Y[X=0])",  
+  rep(TRUE, length(query)-4))
+
+query_labs = 
+  c(ATE = "ATE", 
+    PC_11 = "Prob. X=1 \n caused Y = 1", 
+    PC_01 = "Prob. X=0 \n caused Y = 1", 
+    via_M = "Probability effect of X\n on Y went via M",
+    DIR_M1 = "Direct effect | M=1",
+    DIR_M0 = "Direct effect | M=0",
+    IND_X1 = "Indirect effect | X=1",
+    IND_X0 = "Indirect effect | X=0",
+    M1 = "Prob(M=1)",
+    ATE_XM = "Effect of X on M",
+    ATE_MY = "Effect of M on Y")
+```
+
+
+# Data strategies
+
+```{r}
+
+make_data_list <- function(data, model) {
+  
+  observed <- collapse_data(data, model, drop_family = TRUE)
+
+  list(
+  
+  on_11 = CQtools::make_possible_data(model, observed = observed, N = 1, conditions = "X==1 & Y==1", withins = TRUE, vars = "M"),
+  
+  off_10 = CQtools::make_possible_data(model, observed = observed, N = 1, conditions = "X==1 & Y==0", withins = TRUE, vars = "M"),
+  
+  on_00_11 = CQtools::make_possible_data(model, observed = observed, N = list(1,1), conditions = c("X==0 & Y==0", "X==1 & Y==1"), withins = TRUE, vars = "M"),
+  
+  off_01_10 = CQtools::make_possible_data(model, observed = observed, N = list(1,1), conditions = c("X==0 & Y==1", "X==1 & Y==0"), withins = TRUE, vars = "M"),
+  
+  XY_11_11 = CQtools::make_possible_data(model, observed = observed, N = 2, conditions = "X==1 & Y==1", withins = TRUE, vars = "M"),
+    
+  onX1_10_11 = CQtools::make_possible_data(model, observed = observed, N = list(1,1), conditions = c("X==1 & Y==0", "X==1 & Y==1"), withins = TRUE, vars = "M"),
+  
+  onY1_01_11 = CQtools::make_possible_data(model, observed = observed, N = list(1,1), conditions = c("X==0 & Y==1", "X==1 & Y==1"), withins = TRUE, vars = "M")
+  )
+}
+
+# make_possible_data(chain_model, observed = collapse_data(base_data,chain_model) %>% select(event, count) , N = list(1,1),  vars = "M", conditions = c("X==1 & Y==1", "X==0 & Y==0"))
+
+```
+
+
+## Combine functions
+
+Take a model list and data; generate possible data from list;
+
+```{r}
+
+inferences <-
+  
+  function(model_list, data, data_function = make_data_list,  ...)
+    
+    model_list %>%
+  
+      lapply(function(model) {
+
+      data_list <- data_function(data, model)
+      
+      print(model$statement)
+      print(data_list)
+            
+      augmented_observed <- augment_observed(data, model)
+      model <- update_model(model, 
+                            augmented_observed, 
+                            keep_transformed = TRUE,data_type = "compact", ...)
+      
+      lapply(c(prior = list(augmented_observed), data_list), function(poss_data) {
+        lapply(1:(ncol(poss_data) - 2), function(j) {
+          comparisons(model, grab_data(poss_data, j),
+                      query, given, ...) %>%
+            mutate(data_realization = j)
+        }) %>%
+          bind_rows()}) %>%
+        bind_rows(.id = "strategy")}) %>%
+        bind_rows(.id = "model") 
+```
+
+
+
+
+# Case selection Implementation
+
+```{r}
+
+data  <- data.frame(X=c(1,1,1,0,0,0), Y=c(1,1,0,1,0,0))
+
+model <- make_model("X->M->Y") 
+
+data_list <- make_data_list(data, model)
+
+
+if(run_selection_1) 
+model <- model %>%
+  update_model(augment_observed(data, model),
+               data_type = "compact")
+
+
+if(run_selection_1) 
+  comparisons(model, 
+            data = data_list[[3]] %>% grab_data(1), 
+            query = "Y[X=1] - Y[X=0]", 
+            given = TRUE)
+
+if(run_selection_1) 
+inf <- inferences(model_list, data, iter = 12000, chains = 16, refresh = 0)  
+  
+if(run_selection_1) 
+write_rds(inf, "case_selection/case_selection_16_10000.rds") 
+```
+
+
+### Choose 6 of 8
+
+```{r}
+# Data set with 8 observations
+
+data8 <- collapse_data(data.frame(X=1, Y = 1), model_list$chain_model) %>%
+  mutate(count = c(3, 1, 1, 3)) %>% expand_data(model_list$chain_model)
+
+make_data_list_6 <- function(data, model) {
+  
+  observed <- collapse_data(data, model, drop_family = TRUE)
+
+  list(
+  
+  on_00_11 = CQtools::make_possible_data(model, observed = observed, N = list(3,3), conditions = c("X==0 & Y==0", "X==1 & Y==1"), withins = TRUE, vars = "M"),
+  
+  spread = CQtools::make_possible_data(model, observed = observed, N = list(2,2,1,1), conditions = c("X==0 & Y==0", "X==1 & Y==1", "X==0 & Y==1", "X==1 & Y==0"), withins = TRUE, vars = "M"))
+  }
+
+possible_data <- make_data_list_6(data = data8, model_list$chain_model)
+  
+if(run_selection_2) 
+inf_6_of_8 <- inferences(list(model_list$chain_model), 
+                  data8,
+                  data_function = make_data_list_6,
+                  iter = 6000, chains = 4, refresh = 2000)  
+
+if(run_selection_2) 
+write_rds(inf_6_of_8, "case_selection/case_selection_6_of_8.rds") 
+
+inf_6_of_8 <- read_rds("case_selection/case_selection_6_of_8.rds") 
+
+inf_6_of_8 %>%
+  dplyr::filter( Query %in% c("ATE", "PC_01", "PC_11")) %>%
+ggplot(aes(strategy, mean)) + 
+  geom_point(aes(colour = prob),size = 2) +
+  geom_point(shape = 1,size = 2,colour = "black") +
+  facet_grid(. ~ Query, scales = "free_y") + 
+  xlab("Strategy")  +
+    ylab("Inferences") + theme_bw()  + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_colour_gradient(low = "white", high = "black")
+
+expected_var_6_8 <- 
+
+inf_6_of_8 %>% 
+  select(-data, -Using, - Given, -Case.estimand) %>% group_by(Query, model, strategy) %>% 
+  summarize(check_prob = sum(prob), n = n(), 
+            #weighted_var = Hmisc::wtd.var(mean, prob),
+            weighted_var = weighted.var(mean, prob),
+            expected_posterior_var = weighted.mean(sd^2, prob),
+            expected_posterior_mean = weighted.mean(mean, prob), .groups = 'drop')  %>%
+  group_by(model, Query) %>% mutate(prior_var = expected_posterior_var[1]) %>% ungroup %>%
+  mutate(expected_learning = 100*(1-expected_posterior_var/prior_var),
+         expected_learning_2 = 100*(weighted_var/prior_var))
+```
+
+```{r}
+expected_var_6_8 %>% 
+#  filter(Query == "ATE") %>%
+  ggplot(aes(strategy, expected_learning_2)) + 
+  geom_point() +
+   facet_grid(. ~ Query) + 
+ xlab("Strategy")  +
+    ylab("Expected reduction in posterior variance")  +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  
+
+```
+
+# Output
+
+```{r results, fig.height = 9, fig.width = 8, fig.cap = "Inferences given observations"} 
+
+all_results <- read_rds("case_selection/case_selection_16_10000.rds")  
+
+all_results <-   
+all_results %>%
+  
+
+  mutate(
+      
+      Model = model, 
+      
+      Model = gsub("_restricted", "_monotonic", Model), 
+
+      Model = ifelse(grepl('chain_model_monotonic', Model), 
+              "Chain monotonic", Model),
+      
+      Model = ifelse(grepl('chain_model', Model), 
+              "Chain", Model),
+  
+      Model = ifelse(grepl('moderator_model_monotonic', Model), 
+              "Moderator monotonic", Model),
+      
+      Model = ifelse(grepl('moderator', Model), 
+              "Moderator", Model),
+
+      Model = ifelse(grepl('confounded_monotonic', Model), 
+              "Confounded monotonic", Model),
+
+      Model = ifelse(grepl('confounded_model_monotonic', Model), 
+              "Confounded monotonic", Model),
+            
+      Model = ifelse(grepl('confounded', Model), 
+              "Confounded", Model),
+  
+      Model = ifelse(grepl('two_path_model_monotonic', Model), 
+              "Two path monotonic", Model),
+
+      Model = gsub("chain", "Chain", Model),
+
+      Model = ifelse(grepl('two_path_half_Chain', Model), 
+              "Two path half chain", Model),
+
+      Model = ifelse(grepl('two_path', Model), 
+              "Two path", Model),
+
+      Model = gsub("base", "Two path", Model), 
+      
+      Model = gsub("confounded", "Confounded", Model), 
+      
+    
+      model_group = gsub(" monotonic", "", Model),
+      
+      Model_2_rows = gsub("monotonic", "\n(monotonic)", Model), 
+      
+      monotonic = ifelse(grepl("monotonic", Model_2_rows),
+                         "Monotonic", "Unconstrained"),
+      monotonic = factor(monotonic, c("Unconstrained", "Monotonic"))
+      ) %>%
+  mutate(
+    mean = ifelse(Query == "PC_01", -mean, mean),
+    query = factor(Query, names(query_labs), query_labs),
+    strategy = factor(strategy, 
+                      c("prior", "off_10", "on_11", "off_01_10", "XY_11_11",  "on_00_11", "onX1_10_11", "onY1_01_11"),
+                      c("prior", "1 off (10)", "1 on (11)", "2 off (01,10)", "2 pos (11, 11)",  "2 on (00, 11)", "fix X (10, 11)", "fix Y (01, 11)"))) 
+
+case_selection_1 <- 
+all_results %>% 
+  dplyr::filter(model != "two_path_half_chain") %>%
+  dplyr::filter( Query %in% c("ATE", "PC_01", "PC_11", "via_M")) %>%
+ggplot(aes(strategy, mean)) + 
+  geom_point(aes(colour = prob),size = 2) +
+  geom_point(shape = 1,size = 2,colour = "black") +
+  ggh4x::facet_nested(query ~ model_group + monotonic, scales = "free_y") +
+  # facet_grid(query ~ model_group + monotonic, scales = "free_y") + 
+  xlab("Strategy")  +
+    ylab("Inferences") + theme_bw()  + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_colour_gradient(low = "white", high = "black")
+
+case_selection_1
+
+write_rds(case_selection_1, "Case_selection_1.rds")
+
+```
+
+# Variance reduction
+
+```{r varresults, fig.height = 3, fig.width = 8, fig.cap = "Reduction in variance on ATE given strategies"} 
+
+
+expected_var <- 
+
+all_results %>% 
+  #select(-data, -Using, - Given, -Case.estimand) %>% 
+  group_by(Query, query, model_group,  monotonic, strategy) %>% 
+  summarize(check_prob = sum(prob), n = n(), 
+            #weighted_var = Hmisc::wtd.var(mean, prob),
+            weighted_var = weighted.var(mean, prob),
+            expected_posterior_var = weighted.mean(sd^2, prob),
+            expected_posterior_mean = weighted.mean(mean, prob), .groups = 'drop')  %>%
+  group_by(model_group, monotonic, query) %>% 
+  mutate(prior_var = expected_posterior_var[1]) %>% ungroup %>%
+  mutate(expected_learning = 100*(1-expected_posterior_var/prior_var),
+         expected_learning_2 = 100*(weighted_var/prior_var))
+
+expected_var %>%
+  dplyr::filter(query=="ATE" & model_group == "Chain" & monotonic == "Unconstrained") %>% 
+  ggplot(aes(expected_learning, expected_learning_2)) + 
+  geom_point()
+```
+
+
+```{r, eval = FALSE}
+
+expected_var %>% dplyr::filter(Query == "ATE") %>%  select(-check_prob, -n, - Query, -expected_posterior_mean) %>% kable(caption = "posterior variance on the ATE", digits = 4)
+
+expected_var %>% 
+  dplyr::filter(Query == "ATE") %>%
+  ggplot(aes(strategy, expected_learning_2)) + 
+  geom_point() +
+   facet_grid(. ~ model) + 
+ xlab("Strategy")  +
+    ylab("Expected reduction in posterior variance")  +
+    theme_bw() +
+  geom_hline(yintercept = 0, color = "red") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  
+```
+
+
+## Main reduction in variance table
+
+```{r varresults2, fig.height = 11, fig.width = 8, fig.cap = "Reduction in variance given strategies"} 
+
+case_selection_2 <-
+  
+expected_var %>% 
+  dplyr::filter(model_group != "Two path half chain") %>%
+  dplyr::filter( Query %in% c("ATE", "PC_01", "PC_11", "via_M")) %>%
+
+  ggplot(aes(strategy, expected_learning_2)) + 
+  geom_point() +
+#  facet_grid(Query ~ model, scales = "free_y") + 
+   facet_grid(query ~ model_group + monotonic, scales = "free_y") + 
+ xlab("Strategy")  +
+    ylab("Reduction in variance")  +
+    theme_bw() +
+#  geom_hline(yintercept = 0, color = "red") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  + coord_trans(y="sqrt")
+
+write_rds(case_selection_2, "Case_selection_2.rds")
+```
+
+# Data table
+
+```{r}
+DT::datatable(all_results %>% select(-Given, -Case.estimand, -Using) %>% mutate(prob = round(prob, 3)))
+```
+
+
+# Wide or Deep
+
+## Functions
+
+```{r}
+
+comparisons <- function(model, data, query, given, ...)
+  
+  update_model(model, data, keep_transformed = TRUE, ...) %>%
+  query_model(
+    query =  query,
+    given = given,
+    using = "posteriors", 
+    case_level = FALSE, 
+    expand_grid = FALSE) %>%
+    arrange(Case.estimand, Given)
+
+new_datas_sets <- 
+  function(model, 
+           n_large=c(100, 400, 1600), 
+           n_small = c(0, 50, 100), 
+           n_sims=2, param_type = 'prior_draw') {
+  
+  schedule <- expand.grid(n_large, n_small)
+  
+  dfs <- apply(schedule, 1, function(j) 
+    lapply(1:n_sims, function(i) make_data(model, n_steps = j, nodes = list(c("X","Y"), "M"), param_type = param_type, verbose = FALSE)))
+  names(dfs) <- apply(schedule, 1, function(j) paste0("dfs_", paste(j, collapse = "-"))) 
+  dfs
+  }
+
+# Function to make a distribution of data sets given some given data
+# New observations drawn from posterior and combine with old observations
+datas <- function(model,  
+                  n_large=c(100, 400, 1600), 
+                  n_small = c(0, 50, 100), 
+                  n_sims=2, 
+                  observed = NULL){
+  
+  if(is.null(observed)) 
+    return(new_datas_sets(model, n_large = n_large, n_small = n_small, n_sims=n_sims, param_type = 'prior_draw'))
+  
+  # Update model once
+  model   <- update_model(model, observed) 
+  
+  # Take multiple new data draws
+  new_dfs <- new_datas_sets(model, n_large, n_small, n_sims, param_type = 'posterior_draw')
+  
+  # Add in original data
+  lapply(new_dfs, function(dfs) lapply(dfs, function(df) bind_rows(df, observed)))
+}
+
+
+
+wide_or_deep <- 
+  
+  function(model, n_large, n_small, query, given, 
+           n_sims=3, refresh = 0, iter = n_iter, 
+           chains = n_chains, observed = NULL, ...){
+  
+  schedule <- expand.grid(n_large, n_small)
+
+  #  Get all the data sets
+  datas(model, n_large,  n_small, n_sims, observed) %>%
+    lapply(function(d) {
+    lapply(d, function(j) 
+      comparisons(model, j, query = query, given = given, refresh = refresh, iter = iter, chains = chains, ...)) %>%
+      bind_rows(.id = "strategy")}) %>%  
+    bind_rows(.id = "design") %>% 
+    mutate(wide_n = rep(schedule[,1], each = n_sims*length(given)),
+           deep_n = rep(schedule[,2], each = n_sims*length(given)))
+}
+
+
+# test <- wide_or_deep(chain_model, 5, 1:2, 2, chains =1)
+```
+
+## Run models
+
+```{r, eval = FALSE}
+n_large=c(100, 400, 1600) 
+n_small = c(0, 50, 100)
+n_sims = 50
+times = 10
+n_chains <- 8
+n_iter   <- 5000
+
+if(run) {
+  for(k in 1:times){
+  for(j in 1:length(model_list))
+  wide_or_deep(model_list[[j]], n_large = n_large, n_small = n_small,  n_sims = n_sims, query = query, given = given) %>% mutate(Model = names(model_list[j])) %>% 
+  write_rds(paste0(path, "/", names(model_list[j]), "_", k, "_", Sys.Date(), ".rds"))}
+}
+```
+
+## Read models
+
+```{r}
+
+
+files <- list.files(path=path)
+files <- files[grepl(".rds", files, fixed = TRUE)]
+
+results <-  files %>%
+  lapply(function(f)     read_rds(paste0(path, "/", f)))
+names(results) <- gsub(".rds", "",  files)
+
+# results <-
+#  list(
+#    read_rds(paste0(path, "/", names(model_list[1]), ".rds")),
+#    read_rds(paste0(path, "/", names(model_list[2]), ".rds"))
+#    )
+# names(results) <- names(model_list)[1:2]
+
+results <- results %>% bind_rows(.id = "Model") 
+results <-  results %>%
+  filter((Model != "chain_with_prior") & (Model != "chain_homog")) %>%
+    mutate(
+      
+      file = Model, 
+      
+      Model = gsub("_restricted", "_monotonic", Model), 
+
+      Model = ifelse(grepl('chain_model_monotonic_', Model), 
+              "Chain monotonic", Model),
+      
+      Model = ifelse(grepl('chain_model_', Model), 
+              "Chain", Model),
+  
+      Model = ifelse(grepl('moderator_model_monotonic_', Model), 
+              "Moderator monotonic", Model),
+      
+      Model = ifelse(grepl('moderator_', Model), 
+              "Moderator", Model),
+
+      Model = ifelse(grepl('confounded_monotonic_', Model), 
+              "Confounded monotonic", Model),
+
+      Model = ifelse(grepl('confounded_model_monotonic_', Model), 
+              "Confounded monotonic", Model),
+            
+      Model = ifelse(grepl('confounded_', Model), 
+              "Confounded", Model),
+  
+      Model = ifelse(grepl('two_path_model_monotonic_', Model), 
+              "Two path monotonic", Model),
+
+      Model = gsub("chain", "Chain", Model),
+
+      Model = ifelse(grepl('two_path_half_Chain_', Model), 
+              "Two path half chain", Model),
+
+      Model = ifelse(grepl('two_path', Model), 
+              "Two path", Model),
+
+      Model = gsub("base", "Two path", Model), 
+      
+      Model = gsub("confounded", "Confounded", Model), 
+      
+      
+      model_group = gsub(" monotonic", "", Model),
+      
+      Model_2_rows = gsub("monotonic", "\n(monotonic)", Model), 
+      
+      monotonic = ifelse(grepl("monotonic", Model_2_rows),
+                         "Monotonic", "Unconstrained"),
+      monotonic = factor(monotonic, c("Unconstrained", "Monotonic"))
+      ) %>%
+
+  filter(wide_n != 200)%>% 
+  filter((Query %in% names(query)))
+
+
+results$model_group %>% table
+results$Model %>% table
+results$Model_2_rows %>% table
+
+```
+### Check
+
+```{r}
+results %>% filter(Model == "Chain" & wide_n == 1600 & Query == "ATE_MY") %>%
+  ggplot(aes(sd^2)) +
+  geom_histogram() + 
+  facet_grid(file ~ deep_n, scales = "free") + 
+  xlab("Posterior variance")  
+
+results %>% filter(Model == "Chain" & deep_n == 50 & Query == "ATE_MY") %>%
+  group_by(file, wide_n) %>% summarize(var = mean(sd^2))   %>%
+  ggplot(aes(var, file, color = wide_n)) + geom_point()
+
+```
+
+## Together
+
+```{r, fig.width = 14, fig.height = 14}
+results %>% filter(Model == "Two path") %>%
+  ggplot(aes(sd^2)) +
+  geom_histogram() + 
+  facet_grid(design ~ Query, scales = "free") + 
+  xlab("Posterior variance")
+```
+
+```{r, fig.width = 14, fig.height = 14}
+
+short <- results %>% 
+  mutate(Wide = factor(wide_n, unique(wide_n) %>% sort, unique(wide_n) %>% sort)) %>%
+  group_by(model_group, monotonic, deep_n, Wide, Query) %>% 
+
+  dplyr::summarize(
+    mean_post_var = round(mean(sd^2), digits = 6),
+    se_of_post_var = round((var(sd^2)/n())^.5, digits = 6),
+    lower = mean_post_var - 1.96*se_of_post_var,
+    upper = mean_post_var + 1.96*se_of_post_var)  
+
+wide_deep_fig <- 
+  short %>%  # filter(Model %in% c("Chain", "Confounded")) %>%
+  ggplot(aes(deep_n, mean_post_var, color = Wide)) +
+  geom_line() + 
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.05) +
+  facet_grid(Query ~ model_group + monotonic, scales = "free_y") +
+  ylab("Expected posterior variance") + 
+  scale_x_continuous(breaks = c(0, 50, 100)) + theme_bw()
+
+
+wide_deep_fig
+
+pdf("wide_or_deep.pdf", width = 14, height = 14)
+wide_deep_fig
+dev.off()
+```
+
+
+
+
+
+```{r, fig.width = 14, fig.height = 14}
+
+wide_deep_fig_book <- 
+  short %>%  
+  filter(!(model_group %in% "Two path half chain")) %>%
+  filter(Query %in% c("ATE", "PC_11", "PC_01", "via_M")) %>%
+  mutate(Query = factor(
+    Query, 
+    c("ATE", "PC_01", "PC_11", "via_M"),
+    c("ATE", "Prob. X=0 \n caused Y = 1",                           "Prob. X=1 \n caused Y = 1", "Probability effect of X\n on Y went via M"))) %>%
+  ggplot(aes(deep_n, mean_post_var, color = Wide)) +
+  geom_line() + 
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.05) +
+  ggh4x::facet_nested(Query ~ model_group + monotonic, scales = "free_y") +
+# facet_grid(Query ~ model_group + monotonic, scales = "free_y") +
+  ylab("Expected posterior variance") + 
+  scale_x_continuous(breaks = c(0, 50, 100)) + theme_bw() +
+  xlab("Number of cases with data on M")  + labs(color='Number of \n X, Y cases') 
+
+
+wide_deep_fig_book
+
+write_rds(wide_deep_fig_book, "wide_deep_fig_book.rds") 
+
+pdf("wide_or_deep.pdf", width = 14, height = 14)
+ wide_deep_fig_book
+dev.off()
+```
+
+

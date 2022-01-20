@@ -1,0 +1,784 @@
+---
+title: "kudos design declaration"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+    self_contained: yes
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#library(devtools)
+#devtools::install_github("DeclareDesign/DeclareDesign")
+library(DeclareDesign)
+library(dplyr)
+library(knitr)
+library(ggplot2)
+set.seed(1)
+n_sims <- 70    # design simulation draws  
+n <- 600        # study size
+n_draws <- 100000 # data simulations for welfare analysis
+```
+
+Always have one U and one P
+Always have one H and one L but this is not known
+Each player has 50%
+
+Is the rate of projection higher among people from 
+
+
+
+Projector welfare effect wrong direction
+
+
+
+# Model
+
+We study a game played by a group of two players in which they can coordinate to select one player, the "leader", to solve a task on behalf of the group.
+
+## Types
+
+Players vary on two dimensions:
+
+* **Ability** A player is either of high ability ($H$) or low ability ($L$) but the ability type is hidden to players. Ability determines the probability with which players can solve the final task. Type $H$ can solve the task successfully with probability $q_H$; and type $L$ with $q_L<q_H$. No players know their types or the types of others.
+
+* **Privilege** A player is  privileged ($P$) with probability $p$, or else underprivileged ($U$). Privilege here has a narrow meaning: a player is privileged if they are liable to receive recognition---kudos---for good performance. Consider for instance a class setting in which a teacher praises kids from an elite background when they do well but provides no feedback to others.
+
+Privilege and ability may possibly be correlated. Let $\phi \in \{\phi_U, \phi_P\}$ denote the probability that a player is of type $H$ depending on their privilege type. 
+We focus on the case in which in fact privileged individuals are less able on average: $\phi_P < \phi_U$. Such a correlation between privilege and ability could arise for instance if our sample "conditioned on a collider"---that is, it conditioned on a feature that depended on possessing either talent or privilege. For example, we might see such a correlation in a world in which we conditioned on graduation from university and in which the probability of graduation was greater for more talented students, but, conditional on talent more privileged students were more likely to graduate.   
+
+We assume privilege status is public information, as is recognition for performance. 
+
+## Play
+
+* **Initial Information.** Players learn their privilege status. They are not told their ability but are told the probability of being high ability given their privilege. 
+
+* **Learning about ability from kudos.**. Both players perform a training task for which the two ability types' success probabilities are identical to those of the final task. There are public signals about both players' performance in the training task. A privileged player who solves the task correctly receives public kudos, signal $k$, with a high probability ($\approx 1$). An unprivileged player who solves the task correctly receives public kudos with a low probability ($\approx 0$), otherwise $n$. Players that do not succeed receive no kudos, signal $n$. 
+
+* **Leadership choice**: After observing these public signals, players have to decide whether they want to lead or not.  If one player wants to lead and the other wants to follow, the player who wants to lead solves the task. If both players want to lead---or  if both want to follow---a coin flip decides who has to solve the task. Preferences are perfectly aligned, as the leader's payoffs are also the follower's payoffs. Absent any taste for leadership players should thus prefer to have the player lead whose probability of being type $H$ is highest.
+
+\section{Updating}
+
+## Rational benchmark
+
+Let $\phi_S$ denote player $i$'s posterior belief about being type $H$ after observing signal $S \in \{k, n\}$. 
+
+When the player receives kudos she can deduce that she must have solved the problem correctly. Letting $C=1$ denote solving the problem. Either she is a high type who solved the problem  or she is a low type who solved the problem. Noting that $\Pr(C, H| P) = \Pr(C | P, H)\Pr(H | P) = q_H\phi_P)$ and $\Pr(C, L| P) = \Pr(C | P, L)\Pr(L | P) = q_L(1-\phi_P)$, posteriors are given by:
+
+
+$$\phi_{kp} = \frac{\phi_P q_H}{\phi_P q_H + \left( 1-\phi_P \right) q_L}$$
+
+Similarly, given any non zero probability that an unprivileged  unprivileged player receives kudos when unsuccessful:
+
+$$\phi_{ku} = \frac{\phi_U q_H}{\phi_U q_H + \left( 1-\phi_U \right) q_L}$$
+
+
+
+
+Non observation of kudos,  $n$, yields beliefs for a privileged player: 
+
+$$\phi_{np} = \frac{ \phi_P (1-q_H)}{\phi_P (1-q_H) + (1-\phi_P)(1-q_L)}$$
+And, as long as  the probability of receiving kudos for an unprivileged player is small:
+
+$$\phi_{nu} = \phi_U$$
+
+## Deviations
+
+We imagine four ways in which individuals might deviate from the rational benchmark. 
+
+* **Joy**: They have a preference for leading ("joy") even when they do not think they can make the best decision for the group 
+* **Projection**: They fail to take account of the privilege of other players when assessing relative ability.  
+* **Base-rate neglect**: They put too little weight on priors when updating on ability.  
+* **Directional biases**: They treat positive and negative news differently when updating.
+
+We are most interested in Joy and Projection.
+
+We discuss each in turn:
+
+### Joy
+
+Let $\phi_i$ denote a player's posterior on own ability and $\phi_{-i}$ the posterior on other's ability. Letting $x_i$ denote the value placed on leading, we imagine player chooses to lead if:
+
+$$\phi_i + x_i > \phi_{-i}, x_i \sim N(\mu, \sigma)$$
+
+In this case, the probability of leading is:
+
+$$1 - F(\phi_{-i} - \phi_i, \mu, \sigma)$$
+where $F$ is the normal distribution function with mean $\mu$ and standard deviation $\sigma$.
+
+### Projection
+
+Projection might arise if:
+
+* a $P$ that is playing a $U$ treats the $U$ as if they were a $P$--- and so is doubly negative when the other does not receive kudos.
+
+* a $U$ playing a $P$ treats the $P$ as if they were a $U$--- and so might be doubly impressed when they see kudos. This however requires imaging a $U$ receiving kudos. Currently this is ruled out, but posteriors can be formed even with an $\epsilon$ probability that your achievements receive kudos. 
+
+We imagine that share $\alpha$ of players are projectors.
+
+### Updating biases
+
+Letting $\delta$ denote baserate neglect, and $\gamma$ and $\beta$ good news / bad news biases we have:
+
+$$\phi_{kp} = \frac{ q_H^\beta\phi_P^\delta}{ q_H^\beta\phi_P^\delta +  q_L^\beta( 1-\phi_P)^\delta}$$
+
+$$\phi_{np} = \frac{ (1-q_H)^b\phi_P^d}{(1-q_H)^b\phi_P^d +  (1-q_L)^b( 1-\phi_P)^d}$$
+
+and so on.
+
+## Estimand summary
+
+In summary our estimands are:
+
+| Estimand | Meaning                                |
+|----------|----------------------------------------|
+| $\alpha$    | Share projectors                       |
+| $\mu$       | Average preference for leadership      |
+| $\sigma$    | Variation in preference for leadership |
+| $\delta$    | Baserate neglect                                      |
+| $\gamma$       | Good news bias                                      |
+| $\beta$        | Bad news bias                                      |
+
+
+# Parameter choices
+
+Key decisions arise when a privileged player with kudos plays with an unprivileged player. 
+
+Absent joy and projection considerations, the privileged player should choose to lead if:
+
+$$\phi_{kp} > \phi_{nu}$$ 
+<!-- $$\frac{ q_H^b\phi_P^d}{ q_H^b\phi_P^d +  q_L^b( 1-\phi_P)^d} > \phi_U\\ -->
+<!-- { q_H^b\phi_P^d(1-\phi_U)} > \phi_Uq_L^b( 1-\phi_P)^d$$ -->
+
+
+$$\left(\frac{q_L}{q_H}\right)^b< \frac{1-\phi_U}{\phi_U}\left(\frac{\phi_P}{1-\phi_P}\right)^d$$
+
+The intuition is that when $q_L$ is low, the stronger is the kudos signal of the privileged player and the more likely it is that the privileged player is indeed able.
+
+Note that if $\phi_P <.5$, as in our example, the right hand side is decreasing with $d$ meaning that if players neglect the baserate---ignore the fact that privileged players are likely to be poor leaders---then they are in general more likely to let the privileged player lead.
+
+## Parameters for critical cases
+
+We can set $p$, $\phi_P$, and $q_H$ to maximize the likelihood of being in this more informative case.  The critical case arises with probability $2p (\phi_Pq_H +  (1-\phi_P)q_L)(1-p)$,
+which is maximized with $p = .5$. So setting $p =.5$ maximizes the share of critical cases (under rationality). This is also maximized when $q_L$ and, especially, $q_H$ are large. 
+
+Note that it would be possible to increase the probability of these case still further if we set up so that pairs always have a $U$ and a $P$ and the role is randomized. This would limit our ability to assess joy parameters however.
+
+```{r, include = FALSE, eval = FALSE}
+# When q_L is low it is more likely that the privileged player is indeed able and so players should prefer the privileged player
+
+2*p * (phi_P*q_H +  (1- phi_P)*q_L_1)*(1-p)
+
+q_L_1/q_H < ((1-phi_U)*phi_P) / ((1-phi_P)*phi_U)
+
+# When q_L is higher it is more likely that the privileged player is not able and so players should prefer the unprivileged player
+
+2*p * (phi_P*q_H +  (1- phi_P)*q_L_2)*(1-p)
+
+q_L_2/q_H < ((1-phi_U)*phi_P) / ((1-phi_P)*phi_U)
+
+## KP should be less than NU when q_L is high
+
+
+```
+
+We can let $q_L$ vary so that the optimal choice in the critical case changes.
+
+## Implied beliefs and actions
+
+Given these considerations we consider the following parameter values:
+
+
+```{r}
+p = .5
+phi_P = .4
+phi_U =  1 - phi_P
+q_H = .8
+q_L_1 = .2
+q_L_2 = .6
+q_H = .92
+q_L_1 = .23
+q_L_2 = .69
+r   <- .999   # chances P gets kudos / U does not
+d <- 1
+b <- 1
+g <- 1
+```
+
+
+```{r}
+# belief on seeing kudos for P. Prior, given P, is phi_P.
+# Pr(H|K, P) =  Pr(K | H,P) Pr(H|P) / (Pr(K | H,P) Pr(H|P) + Pr(K | L,P) Pr(L|P))
+# Pr(H|K, P) =  Pr(K | H,P) phi_P / (Pr(K | H,P) phi_P + Pr(K | L,P) (1-phi_P))
+# Pr(H|K, P) =  Pr(K|S,H,P)Pr(S |H,P) phi_P / (Pr(K|S,H,P)Pr(S |H,P)phi_P + Pr(K|S,L,P)Pr(S | L,P)(1-phi_P))
+# Pr(H|K, P) =  1*q_H*phi_P / (1*q_H*phi_P + 1*q_L*(1-phi_P))
+# Note Pr(K|S,H,P) depends on P and S only and not on H (given S)
+#f_phi_kp <- function(phi_P, q_H, q_L) (phi_P * q_H) / (phi_P * q_H + ( 1 - phi_P) *q_L)
+
+f_phi_kp <- function(phi_P, q_H, q_L, r = 1, d = 1, g = 1) 
+  (phi_P^d * q_H^g) / (phi_P^d * q_H + ( 1 - phi_P)^d *q_L^g)
+
+# belief on seeing kudos for U: valid assuming non zero (but possibly tiny) probability of seeing kudos (1-r, r \approx 1)
+f_phi_ku <- function(phi_P, q_H, q_L, r = 1, d = 1, g = 1) 
+  (phi_U^d * q_H^g) / (phi_U^d * q_H^g + ( 1 - phi_U)^d * q_L^g)
+
+# belief on seeing no kudos for P
+# f_phi_np <- function(phi_P, q_H, q_L) 
+#   (phi_P * (1-q_H)) / (phi_P * (1-q_H) + ( 1-phi_P) *(1-q_L))
+
+# belief on seeing no kudos for P
+# given less than perfect probability of seeing kudos when successful (r \approx 1)
+#f_phi_np <- function(phi_P, q_H, q_L, r) 
+#  (phi_P * (1-q_H + q_H*(1-r))) / (phi_P * (1-q_H  + q_H*(1-r)) + ( #1-phi_P) *(1-q_L + q_L*(1-r)))
+
+f_phi_np <- function(phi_P, q_H, q_L, r = 1, d=1, b=1) 
+  (phi_P^d * (1-q_H + q_H*(1-r))^b) / (phi_P^d * (1-q_H  + q_H*(1-r))^b + ( 1-phi_P)^d *(1-q_L + q_L*(1-r))^b)
+
+# belief on seeing no kudos for U
+# given small chance of of seeing kudos when successful (1-r, for r \approx 1)
+f_phi_nu <- function(phi_P, q_H, q_L, r = 1, d = 1, b =1) 
+  (phi_U^d * (1-q_H + q_H*r)^b) / (phi_U^d * (1-q_H  + q_H*r)^b + ( 1-phi_U)^d *(1-q_L + q_L*r)^b)
+# note with r = 1 this is phi_U
+
+
+hard_choice <- function(phi_P, q_H, q_L, p) 
+  2*p * (phi_P*q_H +  (1- phi_P)*q_L)*(1-p)
+
+# rational belief given privilege and kudos (privilege known)
+f_phi <- function(P, K, phi_P, phi_U, q_H, q_L, r = 1, d = 1, g = 1, b = 1){
+  x <- rep(NA, length(P))
+  x[K==0 & P==0]  <- f_phi_nu(phi_P, q_H, q_L, r, d, b)[K==0 & P==0]
+  x[K==1 & P==0]  <- f_phi_ku(phi_P, q_H, q_L, r, d, g)[K==1 & P==0]
+  x[K==0 & P==1]  <- f_phi_np(phi_P, q_H, q_L, r, d, b)[K==0 & P==1]  
+  x[K==1 & P==1]  <- f_phi_kp(phi_P, q_H, q_L, r, d, g)[K==1 & P==1]
+  x 
+  }
+```
+
+| Parameter | Version 1 |  Version 2 |
+|:---------:|:-------:|:----------:|
+| $q_L$     | `r q_L_1`     |  `r q_L_2`       |
+| $q_H$     | `r q_H`     | `r  q_H`        |
+| $\phi_P$  | `r phi_P`     | `r phi_P`        |
+| $\phi_U$  | `r phi_U`     | `r phi_U`        |
+| $p$       | `r p`     | `r p`        |
+| $\phi_{kp}$     | `r f_phi_kp(phi_P, q_H, q_L_1) %>% round(3)`  |  `r f_phi_kp(phi_P, q_H, q_L_2) %>% round(3)`         |
+| Prob critical | `r hard_choice(phi_P, q_H, q_L_1, p)` | `r hard_choice(phi_P, q_H, q_L = q_L_2, p)` |
+
+These parameter values imply the following posterior beliefs for rational players:
+
+```{r}
+expand.grid(P = 0:1, K = 0:1, q_L = c(q_L_1, q_L_2)) %>%
+  data.frame() %>% 
+  mutate(phi = 
+f_phi(P, K, phi_P, phi_U, q_H, q_L, r = 1, d = 1, g = 1, b = 1)) %>% 
+  kable(digits = 2)
+```
+
+And they produce variation in behavior for projectors and rational players as follows (given own/other privilege status and kudos observed):
+
+```{r, message = FALSE}
+# decision to lead is a function of privileges and kudos
+# and projection and joy of leading and updating biases
+# i is self j is other
+# good news/ bad news biases are for own signal only
+
+lead <- function(Pi, Pj, Ki, Kj, joy, projector,
+                 phi_P, phi_U, q_H, q_L, r= 1, d=1, g=1, b=1){
+  
+  # projectors assign own privilege to other
+  Pj[projector == 1] <- Pi[projector == 1] 
+  
+  
+    1*(
+      (f_phi(Pi, Ki, phi_P, phi_U, q_H, q_L, r = r, d=d, g=g, b=b) + joy) >
+        f_phi(Pj, Kj, phi_P, phi_U, q_H, q_L, r = r, d=d, g=1, b=1))
+  
+}
+
+# Probability of leading
+p_lead <- function(Pi, Pj, Ki, Kj, projector,
+                 phi_P, phi_U, q_H, q_L, mu, sigma,
+                 d=1, g=1, b=1){
+  
+  Pj[projector ==1] <- Pi[projector ==1] 
+  # assign own privilege to other
+  
+1 - pnorm(f_phi(Pj, Kj, phi_P, phi_U, q_H, q_L, d=d, g=1, b=1) - 
+            f_phi(Pi, Ki, phi_P, phi_U, q_H, q_L, d=d, g=g, b=b),
+    mu, sigma)
+  
+}
+
+
+# p_lead(Pi, Pj, Ki, Kj, projector, phi_P, phi_U, q_H, q_L, mu, sigma, d)
+
+df <- expand.grid(Pi = 0:1, Pj = 0:1, 
+                  Ki = 0:1, Kj = 0:1, 
+                  joy = c(-.01, .01), 
+                  projector = 0:1, d = 1,
+                  q_L = c(q_L_1, q_L_2)) %>% 
+  data.frame() %>%
+  filter(!((Pi==0 & Ki==1) | (Pj==0 & Kj==1))) %>%
+  mutate(choice = lead(Pi, Pj, Ki, Kj, joy, projector,
+                 phi_P, phi_U, q_H, q_L, 
+                 d = d))
+
+choice_L_P = 
+df %>% filter(projector == 1 & q_L == q_L_1 ) %>%
+  group_by(Pi, Ki, Pj, Kj) %>% 
+  summarize(choice = mean(choice)) %>%  
+  pull(choice)
+
+choice_H_R = 
+df %>% filter(projector == 0 & q_L == q_L_2) %>%
+  group_by(Pi, Ki, Pj, Kj) %>% 
+  summarize(choice = mean(choice)) %>%  
+  pull(choice)
+
+choice_H_P = 
+df %>% filter(projector == 1 & q_L == q_L_2) %>%
+  group_by(Pi, Ki, Pj, Kj) %>% 
+  summarize(choice = mean(choice)) %>%  
+  pull(choice)
+
+differences <-
+  df %>% filter(projector == 0 & q_L == q_L_1) %>%
+  group_by(Pi, Ki, Pj, Kj) %>% 
+  summarize(choice_L_R = mean(choice), .groups = "drop")  %>%  
+  mutate(
+    choice_H_R = choice_H_R,
+    choice_L_P = choice_L_P, choice_H_P = choice_H_P) 
+
+differences %>% filter(differences[, 5:8] %>% apply(1, sd) != 0) %>%
+  kable(caption = "Decision to lead given q_L/q_H and rationalist / projector: there are 
+        four cases in which we expect differences in behavior")
+
+
+```
+
+
+# Estimation strategy
+
+## Measurement
+
+We measure (1) choices plus (2) beliefs about  the other player's ability (**not clear to me the best ordering for these two measurements**).
+
+## Estimation
+
+A test of the presence of projectors can be gotten by regressing errors in beliefs on own status. The estimated ATE captures the effect of own privilege on beliefs about the ability of others (which should be negative); it does not measure projection directly, however if there is no projection then this average effect will be 0 and so the test statistic can be used as a test of the presence of projectors.
+
+
+Estimation of parameters is done via maximum likelihood.
+
+### Likelihood
+Using choice data only we have a likelihood that depends on belief about own ability, belief about other ability, choice.
+
+Let $Z$ denote the treatment vector $Z = (P_i, P_{-i}, K_i, K_{-i}, q_L)$ and $\theta$ the parameter vector $\theta = c(\alpha, \mu, \sigma)$
+
+Let $\phi^s$ denote the posterior belief on own ability given privilege status $P$ and kudos $K$ and  $\phi^o$ the posterior belief on the other's ability. These functions differ because since good news and bad news biases operate on own information only.
+
+The probability that a non projector will choose to lead, given own privilege and kudos $P_i, K_i$ and the others privilege and kudos, $P_{-i}, K_{-i}$ is then:
+
+$$\lambda^0(\mu_y, \sigma_y | Z) = 1 - F(\phi^o(P_i, P_{-i}, K_i, K_{-i}, q_L) - \phi^s(P_i, P_{-i}, K_i, K_{-i}, q_L), \mu_y, \sigma_y)$$
+The probability that a projector will choose to lead is:
+
+$$\lambda^1(\mu_y, \sigma_y | Z) = 1 - F(\phi^o(P_i, P_{i}, K_i, K_{-i}, q_L) - \phi^s(P_i, P_{-i}, K_i, K_{-i}, q_L), \mu_y, \sigma_y)$$
+
+where the key difference is that $P_i$ appears in place of $P_{-i}$  in $\phi^o$. 
+
+Letting $y_i \in\{0,1\}$ denote the leadership decision, the likelihood is:
+
+$$L(\alpha, \mu, \sigma | y) = y(\alpha \lambda^1 + (1-\alpha)\lambda^0) + (1-y)(\alpha (1-\lambda^1) + (1-\alpha)(1-\lambda^0))$$
+
+
+
+
+
+
+### Likelihood with beliefs
+
+Say we also observe $\hat{\phi}_{-i}$---a report about a subject's beliefs about the ability of the other players. We will imagine that the reported belief is a noisy measure of the true belief, which is given by the functions above (alternatively one might imagine that there is an accurate  measure of a noisy true belief, though the likelihood would be different in this case).
+
+Say now that $\hat{\phi}_{-i} \sim Beta(\kappa\phi_{-i}, \kappa(1-\phi_{-i}))$. 
+Here $\kappa$ captures the accuracy of belief reports, which are assumed to be possibly noisy but unbiased.
+
+Our likelihood should now incorporate the probability of observing the stated action *and* the stated belief.  The only source of uncontrolled variation across beliefs arises from the distribution of projectors. 
+
+
+$$L(\alpha, \mu, \sigma | y, \hat{\phi}_{-i}) = \alpha(y\lambda^1 + (1-y)(1-\lambda^1))f_\beta(\kappa\phi^o_{1}, \kappa(1-\phi^o_{1})) + (1-\alpha)(y\lambda^0 + (1-y)(1-\lambda^0))f_\beta(\kappa\phi^o_{0}, \kappa(1-\phi^o_{0})))$$
+
+where $\phi^o_{1} := \phi^o(P_i, P_{i}, K_i, K_{-i}, q_L)$ is the belief of a projector about the other player's type and 
+$\phi^o_{0} := \phi^o(P_i, P_{-i}, K_i, K_{-i}, q_L)$ is the belief of a non projector.
+
+We implicitly assume  here that the joy of leading $x$ and projector type are independent.
+
+
+# Declaration
+
+The next code chunk provides a "declaration" of this design. The declared design can then be used to simulate data, implement analysis, and assess design properties.
+
+Lots more on design declaration and diagnosis here:
+https://book.declaredesign.org/
+
+
+
+```{r, warning=FALSE}
+# parameters
+n     <- 100
+mu    <- .15
+sigma <- .1
+alpha <- .2 # share projectors
+delta <- .9 # base rate bias
+kappa <- 4
+
+# A function to attach your partners data to your row
+other <- function(data)
+  data %>% 
+  arrange(pair) %>%
+  group_by(pair) %>%
+  mutate(Hj = c(H[2], H[1]),
+         Pj = c(P[2], P[1]), 
+         Kj = c(K[2], K[1])) %>% ungroup
+
+# A function to record your choice
+choices <- function(data)
+  data %>% 
+  arrange(pair) %>%
+  group_by(pair) %>%
+  mutate(Pj = c(P[2], P[1]), 
+         Kj = c(K[2], K[1]),
+         leads =  lead(P, Pj, K, Kj, joy, projector,
+                 phi_P, phi_U, q_H, q_L, d=d, g = g, b = b))
+
+# individual likelihood
+f2 <- function(leads, reported_belief,
+              P, Pj, K, Kj, 
+              phi_P, phi_U, q_H, q_L,
+              alpha, mu, sigma, delta, kappa){
+
+  lambda_1 <- 
+    p_lead(P, Pj, K, Kj, projector=1, 
+           phi_P, phi_U, q_H, q_L, 
+           mu = mu, sigma = sigma, d=delta)
+  lambda_0 <- 
+    p_lead(P, Pj, K, Kj, projector=0, 
+           phi_P, phi_U, q_H, q_L, 
+           mu = mu, sigma = sigma, d=delta)
+
+  # Projectors belief about the other  
+  belief_1 = f_phi(P, Kj, phi_P, phi_U, q_H, q_L, r = 1, d=delta, g=1, b=1)
+  
+  # non projectors belief about the other  
+  belief_0 = f_phi(Pj, Kj, phi_P, phi_U, q_H, q_L, r = 1, d=delta, g=1, b=1)
+  
+    alpha*(leads*lambda_1 + (1-leads)*(1-lambda_1))*dbeta(reported_belief, kappa*belief_1, kappa*(1-belief_1)) +
+    (1-alpha)*(leads*lambda_0 + (1-leads)*(1-lambda_0))*dbeta(reported_belief, kappa*belief_0, kappa*(1-belief_0))
+
+
+}
+
+
+structural_estimator_2 <- function(data){
+  
+# Define negative log likelihood as a function of parameters
+# Note that q_L is in data
+LL2  <- function(alpha, mu, sigma, delta, kappa) {
+    
+    R <- with(data, 
+              f2(leads, reported_belief,
+                 P, Pj, K, Kj, 
+                 phi_P, phi_U, q_H, q_L,
+                alpha, mu, sigma, delta=delta, kappa = kappa))
+
+
+    -sum(log(R))
+  }
+  
+  # Estimation
+  M <- bbmle::mle2(
+    LL2,
+    # method = "L-BFGS-B",
+    optimizer = "nlminb",
+    start = list(alpha = .1, mu = 0, sigma = .2, delta = 1, kappa = 10),
+    lower = c(alpha = 0.05, mu = -.5, sigma = .01, delta = .5, kappa = .5),
+    upper = c(alpha = .95, mu = .5, sigma = 0.3, delta = 1.2, kappa = 60)
+  )
+  
+  # Format output from estimation
+  out <- bbmle::coef(bbmle::summary(M)) %>% data.frame()
+  
+  names(out) <- c("estimate", "std.error", "statistic", "p.value")
+  
+  # Flag: Should be able to do better ci's than this
+  out %>% mutate(conf.low = estimate - 1.96*std.error, 
+                 conf.high = estimate + 1.96*std.error)
+
+}
+
+# H leads
+payoff <- function(data)
+  data %>% group_by(pair) %>%
+  mutate(w = leads[1] != leads[2],  # Decision 
+         w = ifelse(w, leads, .5),  # Randomize if indecision
+         payoff = (H[1]*w[1] + H[2]*w[2])/(w[1] + w[2])) %>%
+  ungroup()
+
+
+# Declaration
+design <- 
+  
+  declare_model(
+    N = n,
+    
+    pair = rep(1:(N/2), 2),
+    
+    # Joy
+    joy  = rnorm(N, mu, sigma),
+    
+    # Projector
+    projector = simple_ra(N, prob = alpha)==1,
+    
+    # Base rate ignoring
+    d = delta, # - runif(N)/20, 
+    
+    # Privilege: note that we use complete ra not simple
+    P = complete_ra(N, prob = p),
+
+    # Ability: note that we use block ra here not simple
+    H = block_ra(blocks = P, block_prob = c(phi_P, phi_U)),
+    
+    # Treatment
+    Z = cluster_ra(clusters = pair),
+    q_L = ifelse(Z==0, q_L_1, q_L_2),
+    
+    # Correct: Note that we use block ra here not indep draws
+    # Blocks are with privilege / ability pairs
+    correct = block_ra(blocks = paste(H,P,Z), 
+                       block_prob = c(q_L_1, q_L_2, q_L_1, q_L_2,
+                                      q_H, q_H, q_H, q_H)),
+  
+    # Kudos
+    K  = correct *  P
+    
+    # Belief about the other
+) + 
+  declare_measurement(handler = other) +
+  
+  declare_measurement(handler = fabricate,
+      subjective_Pj = ifelse(projector == 1, P, Pj),
+      belief_i = f_phi(P, K, phi_P, phi_U, q_H, q_L, 
+                       r = 1, d=d, g=g, b=b),
+      belief_j = f_phi(subjective_Pj, Kj, phi_P, phi_U, q_H, q_L, 
+                       r = 1, d=d, g=1, b=1),
+      error = belief_j - Hj,
+      error_sq = error^2,
+      reported_belief = rbeta(N, belief_j*kappa, (1-belief_j)*kappa),
+      leads = 1*((belief_i + joy) > belief_j)) +
+
+  declare_measurement(handler = payoff) + 
+  
+  declare_inquiry(alpha = alpha, mu = mu, sigma = sigma, delta = delta, kappa = kappa) +
+
+  declare_estimator(handler = label_estimator(structural_estimator_2),
+inquiry = c("alpha", "mu", "sigma", "delta", "kappa")) +
+  
+  declare_estimator(reported_belief ~ P , label = "projector test",
+                    model = difference_in_means, blocks = paste(Pj, Kj),
+                    inquiry = "alpha")
+
+```
+
+Data check
+
+```{r}
+design %>% redesign(n = 5000) %>% 
+  draw_data() %>% 
+  group_by(H, P, q_L) %>% 
+  summarize(n(), mean(correct), mean(K)) %>%
+  kable(digits = 2, caption = "Distribution of cases and kudos")
+  
+```
+The likelihood function appears well behaved on simulated data: 
+
+```{r liks, fig.cap = "Likelihoods"}
+
+data <- design %>% redesign(kappa = 10) %>% draw_data()
+
+LL  <- function(alpha, mu, sigma, delta, kappa) {
+    
+    R <- with(data, 
+              f2(leads, reported_belief,
+                 P, Pj, K, Kj, 
+                 phi_P, phi_U, q_H, q_L,
+                alpha = alpha, mu = mu, sigma = sigma, delta = delta, kappa = kappa))
+
+    -sum(log(R))
+  }
+
+par(mfrow=c(2,2))
+as <- c(0.01, .05, .1, .2, .3, .4, .5)
+plot(as, sapply(as, function(a) LL(a, mu, sigma, delta, kappa)), ylab = "L", type = "b",
+     xlab = (expression(alpha)))
+
+ms <- c(-.2, -.2, 0, .1, .2, .3, .4, .5)
+plot(ms, sapply(ms, function(m) LL(alpha, m, sigma, delta, kappa)), ylab = "L", type = "b",
+     xlab = (expression(mu)))
+
+ss <- c(0.03, .05, .075, .1, .125, .15, .175)
+plot(ss, sapply(ss, function(s) LL(alpha, mu, s, delta, kappa)), ylab = "L", type = "b",
+     xlab = (expression(sigma)))
+
+ds <- c(.6, .7, .8, .85, .9, .95, 1, 1.05, 1.1)
+plot(ds, sapply(ds, function(dd) LL(alpha, mu, sigma, dd, kappa)), ylab = "L", type = "b",
+     xlab = (expression(delta)))
+```
+
+And the MLE estimator recovers parameters reasonably well. The next figure plots estimates across `r n_sims` simulations for `r n` subjects.
+
+
+```{r, warning = FALSE}
+# structural_estimator(data)%>% kable
+# draw_estimates(design) %>% select(-estimator) %>% kable
+
+simulations <- design %>%
+  simulate_design(sims = n_sims)
+
+simulations <- simulations %>% 
+  mutate(inquiry = ifelse(estimator == "projector test", 
+                           "ate (projection)", inquiry))
+simulations %>% ggplot(aes(estimate)) +
+  facet_wrap(~inquiry, scales = "free") + geom_histogram()
+```
+
+
+```{r, warning = FALSE}
+diagnosis_2 <- diagnose_design(simulations)
+
+diagnosis_2 %>% reshape_diagnosis %>% 
+  mutate(Inquiry = ifelse(Estimator == "projector test", 
+                           "ate (projection)", Inquiry)) %>%
+  select(Inquiry, Bias, Power, Coverage, "Mean Estimate", "Mean Estimand", "SD Estimate", "Mean Se") %>% kable()
+
+```
+
+The diagnosis reports power and coverage though these are not the most useful statistics for this problem (excet for the projector test). Better to focus on the final column which is the expected standard error of our estimates.
+
+Note the ATE "estimate" is not targetted at an estimand. The focus here is on power to reject a null of no projection.
+
+
+# Design choices
+
+Here we modify features of the design, such as the `N` and  the value of `q_L_1` to see how we perform. We focus here on the RMSE to evaluate designs.
+
+```{r, warning = FALSE, fig.cap= "RMSE for different values of q_L_1 and study sizes"}
+set.seed(1)
+diagnoses <- design %>%
+  redesign(n = c(140, 160, 180, 200, 220), q_L_1 = c(0.05, .1, .2)) %>%
+  diagnose_design(sims = n_sims)
+
+diagnoses$diagnosands_df %>% 
+  rename(Q = inquiry) %>%
+  mutate(Q = ifelse(estimator == "projector test", 
+              "ate (projection)", Q)) %>%
+
+  ggplot(aes(n,rmse, color = factor(q_L_1))) + geom_line() + 
+  facet_grid(Q ~ ., scales = "free_y") +
+  ylim(c(0, NA)) + theme_bw()
+
+# ddf <- diagnoses$diagnosands_df %>%   rename(Q = inquiry) %>%
+# select(-starts_with("se("), -estimator. -n_sims, - type_s_rate, -mean_estimand) %>%
+#   reshape2::melt(id.vars = c("design", "n", "q_L_1", "Q"), variable.name = "diagnosand") %>%
+#   head()
+
+# Bad behavior?
+#diagnoses %>% ggplot(aes(estimate)) +
+#  facet_wrap(~inquiry, scales = "free") + geom_histogram()
+
+```
+
+Note that the RMSE does not change much for the ATE because this is always estimated with considerable bias. 
+
+The choice of `q_L_1` appears not too important. We see quite large gains for N up to 180 but modest gains thereafter.
+
+Power is not a concern for the structural parameters. However for the ATE test of the null projector hypothesis power is relatively weak.
+
+```{r, warning = FALSE, fig.cap= "Power for different values of q_L_1 and study sizes"}
+diagnoses$diagnosands_df %>% 
+  rename(Q = inquiry) %>%
+  mutate(Q = ifelse(estimator == "projector test", 
+              "ate (projection)", Q)) %>%
+
+  ggplot(aes(n,power, color = factor(q_L_1))) + geom_line() + 
+  facet_grid(Q ~ ., scales = "free_y") +
+  ylim(c(0, NA)) + theme_bw()
+
+```
+
+
+
+# Welfare
+
+We calculate the probability that a $H$ type will be selected to lead given our parameters and assess how this depends on biases. Note if leaders were chosen randomly then the probability a $H$ type would lead would be .5. If the best leader in a pair was always selected then the probability that a $H$ type would lead would be .75.
+
+* The share of projectors has a modest effect on welfare.
+* Joy of leading has a bigger effect.
+* Baserate neglect (delta below 1) has reasonable effect but it actually appears to *help* when $\delta<1$. Can that be right?
+
+
+```{r}
+alphas <- (0:5)/5
+
+a_payoffs <- 
+  lapply(alphas, function(a)
+    design %>%
+      redesign(n = n_draws, alpha = a, mu = 0, sigma = 0, delta = 1) %>%
+      draw_data() %>% pull(payoff) %>% 
+      mean)
+
+
+mu <- (0:5)/10
+
+m_payoffs <- 
+  lapply(mu, function(m)
+    design %>%
+      redesign(n = n_draws, mu = m, alpha = 0, delta = 1) %>%
+      draw_data() %>% pull(payoff) %>% 
+      mean)
+
+
+deltas <- (1:10)/5
+
+d_payoffs <- 
+  lapply(deltas, function(dd)
+    design %>%
+      redesign(n = n_draws, mu = 0, sigma = 0, alpha = 0, delta = dd) %>%
+      draw_data() %>% pull(payoff) %>% 
+      mean)
+yl <- c(.53, .58)
+par(mfrow = c(1, 3))
+plot(alphas, a_payoffs, main = "projectors", ylim = yl, type = "b")
+plot(mu, m_payoffs, main  = "joy", ylim = yl, type = "b")
+plot(deltas, d_payoffs, main = "base rate neglect", ylim = yl, type = "b")
+```
+
+# Extensions / Next
+
+* Think we should worry that share projectors has such a small welfare effect in this design. 
+* $\gamma$ and $\beta$ have not yet been added into the likelihood function
+* Can explore whether other parameter values will improve precision
+* We should figure out why base rate neglect might help
+* Suggest we elaborate our analysis by assessing whether parameters are also structured by demographics. e.g. gender and some measure of parental wealth. 
+
+# To discuss
+
+* Welfare effects seem so modest because often there is not much at stake and mistakes are not made anyhow.
+* Having privilege be full information obviously makes projection harder but I think we think that's the world we are in.
+* Suggest moving to 10% and 90% kudos probabilities for privileged which allows a little more scope for projection. Q: Better to do as "You are almost certainly not privileged" (and keep the definition of kudos iff privileged" or "You are not privileged and so almost certain not to get kudos."
+* Design uses both complete and block random assignments at multiple points. This is because independent draws produce a lot of variability and risks of empty cells-- e.g. L types that are unprivileged and that get it right -- can be as few as 4% of the sample ($.5(1-\phi_P)q_L$). Think there may be ways to do this by predefining cases ($P,K$ pairs) and assigning pairs to cases.
+* Setting $p=.5$ maximizes share of priority switched for rational player (but may not be most powerful in other cases)
+* Note that it would be possible to increase the probability of these case still further if we set up so that pairs always have a $U$ and a $P$ and the role is randomized. This would limit our ability to assess joy parameters however. 
+* Better maybe if we always had a $H$ and $L$ type then there is always something at stake. This introduces a correlation in types and worth thinking through.
+* Order of measurement

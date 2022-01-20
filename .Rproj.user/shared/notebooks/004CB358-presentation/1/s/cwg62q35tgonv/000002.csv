@@ -1,0 +1,5 @@
+"0","small_owd %>% ggplot(aes(gdp_per_capita, total_deaths_per_million+.01))  + geom_point() + xlab(""Deaths / million"") + ylim(NA, 100) + ylab(""% vaccinated"") + scale_x_continuous(trans='log2')
+"
+"2","Warning:"
+"2"," Removed 166 rows containing missing values (geom_point).
+"

@@ -1,0 +1,396 @@
+---
+title: "Incentives and Covid-19 vaccination"
+author:
+ - Heike Klüver, Humboldt
+ - Felix Hartmann, Humboldt
+ - Macartan Humphreys, WZB and Columbia
+ - Ferdinand Geißler, Humboldt
+ - Johannes Giesecke, Humboldt
+date: "9/8/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, include = FALSE, message = FALSE}
+load("../analysis_public/output/PNAS_analysis.RData")
+```
+
+
+```{r, include = FALSE, message = FALSE}
+if (!require(pacman)) install.packages("pacman")
+
+pacman::p_load(
+  rgdal,       # geo data
+  geojsonsf,   # read json
+  rgeos,       # geo data
+  sf,          # geo data
+  gridExtra,   # plot arrange
+  gtrendsR,    # google trends
+  aod,         # hypothesis testing (1.3.1)
+  car,         # linear hypothesis testing for causal tree (3.0-2)
+  corrplot,    # Correlations (0.84)
+  DeclareDesign, 
+  dplyr,       # Data manipulation (0.8.0.1)
+  evtree,      # evolutionary learning of globally optimal trees (1.0-7)
+  fastDummies,
+  fBasics,     # Summary statistics (3042.89)
+  ggplot2,
+  ggpubr,
+  grf,         # Generalized random forests (0.10.2)
+  haven,       # load sav
+  interplot,   # Interactions plotting
+  kableExtra,  # Prettier RMarkdown (1.0.1)
+  knitr,
+  labelled,
+  psych,       # Correlation p-values (1.8.12)
+  purrr,
+  rpart,       # Classification and regression trees, or CART (4.1-13)
+  reshape2,
+  rpart.plot,  # Plotting trees (3.0.6)
+  readr,       # Reading csv files (1.3.1)
+  sjlabelled,
+  stats,
+  summarytools,
+  texreg,
+  tidyverse,
+  tidyselect,
+  tidyr,       # Database operations (0.8.3)
+  treeClust,   # Predicting leaf position for causal trees (1.1-7)
+  tibble)      # Modern alternative to data frames (2.1.1)
+
+options("kableExtra.html.bsTable" = T)
+
+```
+
+# Motivation and roadmap
+
+## Roadmap
+
+* motivation
+* study
+* results: [main, heterogeneity, interpretation]
+* defending the results
+* reflections
+
+## Motivation
+
+* Simple timely **policy question** for German (and other) policy makers: *how to increase uptake of vaccines?*
+* Various strategies:
+  * Information
+  * Moral argumentation
+  * Changed incentives $\leftarrow$
+* **Social science question**: how do costs figure into risk of death calculations? 
+* Approach is survey based "factorial experiment"
+
+# The population
+
+## Taken from an online panel
+
+* Online access panel of the survey company Respondi
+* Recruited via online and offline channels
+* Panelists complete a profiling questionnaire with sociodemographics
+* Sample structured to be demographically representative: gender, age, locations. But still *convenience* with respect to population. 
+* 20,500 respondents 
+* Survey fielded over 20 days: from 5 March to 25 March 2021
+* Preanalysis plan with EGAP/OSF
+
+## Patterns: How much hesitancy
+
+```{r}
+fig_1
+```
+
+* Not unusual for OECD, broadly in line with other numbers. 
+* Current: ca [62%](https://graphics.reuters.com/world-coronavirus-tracker-and-maps/countries-and-territories/germany/) fully vaccinated (ca 70% of adults)
+
+## What are the concerns?
+
+```{r}
+fig_2
+```
+
+## Who is concerned?
+
+```{r, fig.height = 9, fig.width = 15, out.width = "100%"}
+fig_cov
+```
+
+# Strategy and Results
+
+## Vignettes
+
+$2 \times 3 \times 2$ conditions with simple random assignment (assigned twice excluding condition repetition)
+
+```{r treatment, echo=FALSE, fig.cap="Variants", out.width = '80%', fig.align = 'center'}
+knitr::include_graphics("figures/treatment.png")
+```
+
+## Outcome
+
+```{r outcome, echo=FALSE, fig.cap="Outcome", out.width = '80%', fig.align = 'center'}
+knitr::include_graphics("figures/outcome_q.png")
+```
+
+We rescale to 0 - 1 and interpret as a probability.
+
+## As it went
+
+```{r implementation, echo=FALSE, fig.cap="Screenshot of questions", out.width = '50%', fig.align = 'center'}
+knitr::include_graphics("figures/Experiment1a.png")
+```
+
+## Analysis
+
+Basic analysis strategy:
+
+```{r, echo = TRUE, eval = FALSE}
+lm_robust(Y ~ Z11*Z2*Z3 +  Z12*Z2*Z3, fixed_effects =~ id)
+```
+
+* Note: `Z1` is broken up into two treatments (25/nothing, 50/nothing)
+* All treatments are de-meaned so that "main" effects target average effects
+* Fully saturated
+* Full set of interactions can be examined also at average levels of other conditions
+
+## Analysis (extra)
+
+In practice analysis using within person differences is simpler. Distribution of within person treatment differences:
+
+```{r, echo = FALSE}
+table(df$negative_diff, df$transaction_diff) %>% 
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "condensed", full_width = F, position = "center"))
+```
+
+## Data and rep
+
+```{r, out.width="70%", fig.align = "center", out.extra='style="background-color: #9ecff7; padding:5px; display: inline-block;"', fig.cap="`.Rmd` archive here: https://wzb-ipi.github.io/covid_hesitancy_2021/"}
+knitr::include_graphics("figures/repo.png")
+```
+
+
+## Main results
+
+```{r}
+figure_1A
+```
+
+Note: strong heterogeneity by prior attitude to vaccination.
+
+## Main results: Policy interpretations
+
+```{r}
+figure_1B
+```
+
+## Main results: Interactions
+
+* Two way and three way interactions quite small
+* Weak substitution
+* Perhaps because different treatments work for different types of people?
+
+```{r, results = "asis", include = FALSE}
+htmlreg(model_list, include.ci = FALSE,
+        custom.coef.map =  list("(Intercept)" = "No incentives",
+                                          "financialA" = "25 E",
+                                          "financialB" = "50 E",
+                                          "negative" = "Freedoms",
+                                          "transaction" = "Local doctors",
+                                          
+"negative:financialA" = "Freedoms * 25 E",
+"negative:financialB" = "Freedoms * 50 E",
+"negative:transaction" = "Freedoms * Local",
+"financialA:transaction" = "Local * 25 E",
+"transaction:financialB" = "Local * 50 E",
+"negative:financialA:transaction" = "Freedoms * Local  * 25 E",
+"negative:transaction:financialB" ="Freedoms * Local* 50 E"), digits = 2, scalebox  = .5, 
+leading.zero = FALSE, single.row = TRUE, stars = 0.05)
+
+```
+
+# Heterogeneity
+
+## Causal forests analysis
+
+* Causal Forests analysis to identify for what *types* (combinations of characteristics) different treatments have stronger or weaker effects
+* Works by partitioning and repartitioning data for effect homogeneity within leafs
+
+* Prominent features
+  * age of the respondent
+  * the date of the survey
+  * level of support for social distancing measures
+  * general solidarity
+  * vaccination undecidedness
+
+
+## BLPs
+
+```{r}
+blps_plot
+```
+
+* Some evidence of weaker effects over time
+* Treatments do *not* produce stronger political polarization between vaccinated and not
+
+## By age
+
+```{r}
+age_plot
+```
+
+Suggests cash not best if focus is on elderly
+
+## By distance
+
+```{r}
+distance_plot
+```
+
+Suggests local doctors is not so much trust as convenience.
+
+# Reliable?
+
+## Predictive of future (reported) behavior
+
+
+```{r confirm, echo=FALSE, fig.cap="Reported status in follow up survey", out.width = '50%', fig.align = 'center'}
+knitr::include_graphics("figures/validation.png")
+```
+
+
+## Lag check
+
+```{r, warning = FALSE}
+lag_out %>%
+  ggplot(aes(term, estimate, color = status, shape = status)) + 
+  geom_point(position = position_dodge(width = 0.3)) + 
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), position = position_dodge(width = 0.3), width = .1) +
+  geom_hline(yintercept=0, linetype="longdash", lwd=0.35, size=0.75, colour = "#B55555") + 
+  theme_bw(base_size=14)+
+  ylab("t1 treatment on t2 vaccination prob (0-1)") + ylim(-.07, .07) + xlab("")
+```
+
+* Expectation is small negative correlation (because negative correlation in assignment between rounds)
+* Possibly some carry over but not large
+
+## Separate analysis of rounds
+
+```{r, echo = FALSE, fig.height = 8, fig.width = 15, warning = FALSE, out.width = "100%"}
+# Analysis first round
+  first <-
+  df %>%
+  split(.$status) %>%
+  map(~lm_robust(outcome_t1 ~ negative_t1 + financialA_t1 + financialB_t1 + transaction_t1, data = .)) %>%
+  map(tidy) %>%
+  bind_rows(.id = "status")%>% 
+  dplyr::filter(term %in% c("negative_t1", "financialA_t1", "financialB_t1", "transaction_t1")) %>% 
+  dplyr::filter(status != "Vaccinated") 
+
+  first<-first %>%
+  ggplot(aes(term, estimate, color = status, shape = status)) + 
+  geom_point(position = position_dodge(width = 0.3)) + 
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), position = position_dodge(width = 0.3), width = .1)+
+  geom_hline(yintercept=0, linetype="longdash", lwd=0.35, size=0.75, colour = "#B55555") + 
+  theme_bw(base_size=14)+
+  ylab("Change in probability of willingness to get vaccinated (0-1)")+
+  ggtitle("First Vignette") 
+
+# Analysis second round
+  second<-df %>%
+  split(.$status) %>%
+  map(~lm_robust(outcome_t2~ negative_t2 + financialA_t2 + financialB_t2 + transaction_t2, data = .)) %>%
+  map(tidy) %>%
+  bind_rows(.id = "status")%>% 
+  dplyr::filter(term %in% c("negative_t2", "financialA_t2", "financialB_t2", "transaction_t2")) %>% 
+  dplyr::filter(status != "Vaccinated") %>%
+  ggplot(aes(term, estimate, color = status, shape = status)) + 
+  geom_point(position = position_dodge(width = 0.3)) + 
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), position = position_dodge(width = 0.3), width = .1)+
+  geom_hline(yintercept=0, linetype="longdash", lwd=0.35, size=0.75, colour = "#B55555") + 
+  theme_bw(base_size=14)+
+  ylab("Change in probability of willingness to get vaccinated (0-1)")+
+  ggtitle("Second Vignette") 
+  
+# Analysis first round
+  ggarrange(first, second, nrow = 1)
+
+```
+
+The refusers seem less swayed second time around. Perhaps frustrated or perhaps opposed to survey goals?
+
+# Reflections
+
+
+## Policy
+
+* Things moved so quickly that 2 out of 3 policies were effectively put in place before we were done. It largely confirmed wisdom of actual policies.
+* Study was fast and got a lot of attention but fast enough for policy?
+
+
+
+## Is this an experiment?
+
+Not really. 
+
+* It's not a field experiment. Differences:
+
+    * the reality and timing of the  choice
+    * the different elements that come into play, including spillovers (e.g. social pressures, learning, political/media reactions)
+
+* It's also not an individual level experiment: our power is so good because *we are not really manipulating conditions*, we are asking *conditional questions*.
+
+* Results seems fairly reliable but more field experimentation would be better. Are there risks of using second best approaches in contexts like this?  
+
+## Ethics
+
+* We got many complaints. 
+* Truth is that this is a divisive issue: our research was geared towards a particular social outcome that a reasonable share of our subjects opposed
+* How to address?
+
+
+## Future
+
+Currently fielding experiments to dig deeper into attitudes to freedoms:
+
+  * what is the tradeoff between personal freedoms and social risks
+  * watch this space
+  
+
+# Extra
+
+## Covariates
+
+```{r}
+kable_styling(summ_stats_table,
+              bootstrap_options=c("striped", "hover", "condensed", "responsive"),
+              full_width=FALSE)
+
+```
+
+```{r}  
+small_df %>%     
+  cor %>%
+  corrplot::corrplot(type="upper",
+         tl.col="black",
+         order="original",
+         tl.cex=1,
+         addgrid.col = "black",
+         p.mat=pairwise_pvalues,
+         sig.level=0.05,
+         number.font=10,
+         insig="blank")
+```
+
+## Main results: More groups
+
+```{r}
+figure_subgroups
+```
+
+
+
+
+

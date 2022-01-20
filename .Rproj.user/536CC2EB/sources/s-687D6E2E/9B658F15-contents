@@ -1,0 +1,853 @@
+---
+title: "Paper: Solidarity"
+author:
+ - Heike Klüver, Humboldt
+ - Felix Hartmann, Humboldt
+ - Macartan Humphreys, WZB and Columbia
+ - Ferdinand Geißler, Humboldt
+ - Johannes Giesecke, Humboldt
+date: "May 2021"
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 2
+    self_contained: yes
+    code_folding: hide
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+    toc_depth: '2'
+keywords: vaccine hesitancy, covid, transaction costs
+theme: null
+abstract: "Respondents support high levels of cash and vaccine transfers to help poorer nations. They are more supportive when health and economic risks of failing to provide support are high; but for the most part support does not depend on these calculations. Preferences over German policy are largely independent of what other countries are doing. Median support for vaccines (90 million) and cash (2 billion) corresponds closely to actual  (100 million doses and 2.2 billion cash)."
+bibliography: references.bib  
+editor_options:
+  chunk_output_type: console
+---
+
+
+# Setup
+
+```{r setup, echo=TRUE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, comment=NA)
+options(qwraps2_markup = "markdown")
+
+## Packages
+if (!require(pacman)) install.packages("pacman")
+
+pacman::p_load(
+  ggpubr,      # for ggarrange
+  ggridges,    # plot
+  cregg,       # conjoint
+  readxl,      # read excel
+  gtrendsR,    # google trends
+  aod,         # hypothesis testing (1.3.1)
+  car,         # linear hypothesis testing for causal tree (3.0-2)
+  corrplot,    # Correlations (0.84)
+  DeclareDesign, 
+  dplyr,       # Data manipulation (0.8.0.1)
+  evtree,      # evolutionary learning of globally optimal trees (1.0-7)
+  fastDummies,
+  fBasics,     # Summary statistics (3042.89)
+  ggplot2,
+  grf,         # Generalized random forests (0.10.2)
+  haven,       # load sav
+  kableExtra,  # Prettier RMarkdown (1.0.1)
+  knitr,
+  labelled,
+  psych,       # Correlation p-values (1.8.12)
+  purrr,
+  rpart,       # Classification and regression trees, or CART (4.1-13)
+  reshape2,
+  rpart.plot,  # Plotting trees (3.0.6)
+  readr,       # Reading csv files (1.3.1)
+  sjlabelled,
+  stats,
+  summarytools,
+  texreg,
+  tidyverse,
+  tidyselect,
+  tidyr,       # Database operations (0.8.3)
+  treeClust,   # Predicting leaf position for causal trees (1.1-7)
+  tibble)      # Modern alternative to data frames (2.1.1)
+
+
+# Set seed for reproducibility
+set.seed(201911) 
+
+```
+
+
+```{r}
+
+deal_labels = c("No deal"=0, "20 give 20 bn"=1, "40 give 20b"=2,
+                "20 give 40 bn"=3, "40 give 40 bn"=4)
+
+# c('Control: kein Abkommen'=0,
+#   'Treatment: Abkommen, 20 Länder, 20 Milliarden'=1,
+#   'Treatment: Abkommen, 40 Länder, 20 Milliarden'=2,
+#   'Treatment: Abkommen, 20 Länder, 40 Milliarden'=3,
+#   'Treatment: Abkommen, 40 Länder, 40 Milliarden'=4)
+
+main_df <- read_csv('1_input/combined.csv')
+
+w4 <- main_df %>% dplyr::filter(wave==4)
+
+# labs <- var_label(w4) %>% unlist
+# data.frame(names(labs), labs) %>% kable()
+
+# creating vignettes
+
+vign_values <- 
+  expand.grid(trading_importance = 0:1, risk=0:1, deal=0:4) %>% 
+  arrange(trading_importance, risk) %>% 
+  set_value_labels(
+    trading_importance = 
+      c('Control: Wirtschaft bleibt unberührt'=0,
+        'Treatment: Wirtschaft schrumpft um 5%'=1),
+    risk=c('Control: Kein Risiko durch Mutationen'=0,
+           'Treatment: Erhöhtes Risiko durch Mutationen'=1),
+                   deal= deal_labels) %>%
+  mutate(vignr=1:20) %>% as_tibble()
+
+df <- 
+  list(
+    w4 %>%
+      mutate(vignr = as.numeric(run1_exp8)) %>% left_join(vign_values) %>%
+      mutate(round = 1,
+         cash = 	exp7_money1,
+         doses = exp7_doses1) %>%
+      select(group, round, cash, doses, trading_importance, risk, deal, ID, perspective_fed_indian, perspective_fed_german, vaccinated),
+    
+    w4 %>%
+      mutate(vignr = as.numeric(run2_exp8)) %>% left_join(vign_values) %>%
+      mutate(round = 2,
+         cash = 	exp7_money2,
+         doses =  exp7_doses2) %>%
+      select(group, round, cash, doses, trading_importance, risk, deal, ID, perspective_fed_indian, perspective_fed_german, vaccinated)) %>% 
+  bind_rows %>%
+  dplyr::filter(group !=3) %>% 
+  mutate(id = ID,
+         others_number = (deal==1 | deal == 3)*2 + (deal==2 | deal == 4)*4,
+         others_giving = (deal==1 | deal == 2)*2 + (deal==3 | deal == 4)*4,
+         others_average = others_giving/others_number, 
+         others_average = ifelse(others_number==0, 0, others_average), 
+         deal = factor(deal, deal_labels, names(deal_labels)),
+         risk_factor = factor(risk, 0:1, c("Low", "High")),
+         trading_factor = factor(trading_importance, 0:1, c("Low", "High")),
+         risk = risk - mean(risk),
+         trading_importance = trading_importance - mean(trading_importance),
+         others_number_norm = others_number - mean(others_number),
+         others_giving_norm = others_giving - mean(others_giving),
+         cash_billions = 	cash*1000,
+         cash_billions_log = 	log(1 + cash_billions))
+```
+
+# Raw patterns
+
+## Coarsened histograms
+
+```{r}
+cash_histogram <- 
+  df %>% mutate(coarsened_cash = ifelse(cash_billions > 12, 12, cash_billions)) %>% ggplot(aes(coarsened_cash)) + geom_histogram() + 
+  xlab("Cash (censored at 12 billion") 
+
+cash_histogram  
+
+# Support sizes
+
+amounts_d <- seq(0, 22, .5)
+amounts_v <- seq(0, 200, 1)
+
+support <- function(x = df$cash_billions, amounts = amounts_d)
+  data.frame(
+    amounts = amounts,
+    support = sapply(amounts, function(j) 
+      mean(x >= j, na.rm = TRUE)))
+
+s1 <- list(
+  Low = support(
+    df %>% dplyr::filter(risk_factor == "Low" & trading_factor == "Low") %>% pull(cash_billions), 
+    amounts = amounts_d),
+  High  =  support(
+    df %>% dplyr::filter(risk_factor == "High" & trading_factor == "High")%>% pull(cash_billions), amounts = amounts_d)) %>% 
+  bind_rows(.id = "Costs")
+
+s2 <- list(
+  Low = support(
+    df %>% dplyr::filter(deal == "No deal") %>% pull(cash_billions)),
+  High  =  support(
+    df %>% dplyr::filter(deal == "40 give 40 bn") %>% pull(cash_billions))) %>% 
+  bind_rows(.id = "Mulilateralism")
+
+
+s3 <- list(
+  Low = support(
+    df %>% dplyr::filter(risk_factor == "Low" & trading_factor == "Low") %>% pull(doses), amounts_v),
+  High  =  support(
+    df %>% dplyr::filter(risk_factor == "Low" & trading_factor == "High") %>% pull(doses), amounts_v)) %>% 
+  bind_rows(.id = "Costs")
+
+s4 <- list(
+  Low = support(
+    df %>% dplyr::filter(deal == "No deal") %>% pull(doses), amounts_v),
+  High  =  support(
+    df %>% dplyr::filter(deal == "40 give 40 bn") %>% pull(doses), amounts_v)) %>% 
+  bind_rows(.id = "Mulilateralism")
+
+supports <- ggarrange(
+  
+s1 %>% ggplot(aes(amounts, support, color = Costs)) + geom_line() + ylim(0,1) + theme_bw() + xlab("German contribution (bn Euro)") + ylab("Share supporting")  + theme(legend.position="bottom"),
+
+s2 %>% ggplot(aes(amounts, support, color = Mulilateralism)) + geom_line() + ylim(0,1) + theme_bw() + xlab("German contribution (bn  Euro)") + ylab("Share supporting")   + theme(legend.position="bottom") + ylab(""), 
+
+s3 %>% ggplot(aes(amounts, support, color = Costs)) + geom_line() + ylim(0,1) + theme_bw() + xlab("German contribution (mio vaccines)") + ylab("Share supporting")  + theme(legend.position="bottom"),
+
+s4 %>% ggplot(aes(amounts, support, color = Mulilateralism)) + geom_line() + ylim(0,1) + theme_bw() + xlab("German contribution (mio vaccines)") + ylab("Share supporting")   + theme(legend.position="bottom") + ylab(""), 
+
+nrow = 2, ncol = 2)
+
+pdf("2_output/cumulative.pdf", height = 6, width = 10)
+ supports 
+dev.off()
+
+supports
+
+```
+
+```{r}
+raw  <- 
+  df %>% 
+  mutate(costs = ((risk_factor == "High") + 2*(trading_factor=="High"))) %>%
+  group_by(trading_factor, risk, deal, costs) %>% 
+  summarize(cash_bn = median(cash_billions, na.rm = TRUE),
+            doses = median(doses, na.rm = TRUE))  %>%
+  gather("outcome","value",  -risk,  -deal, -trading_factor, -costs)
+
+medians_plot <- 
+raw %>% ggplot(aes(risk, value, color = trading_factor)) + 
+  facet_grid(outcome ~ deal, scales = "free_y") + geom_point()  + geom_line() + ylim(c(0, NA)) + theme_bw() + ylab(" ")+
+  scale_x_continuous(breaks=c(-.45,.45), labels = c("Low", "High")) 
+
+pdf("2_output/medians.pdf", height = 5, width = 8)
+ medians_plot 
+dev.off()
+# Note: use bootstrapping to add standard errors on the median?
+
+
+
+observation_plot <- function(data = df)
+data %>% dplyr::select(risk_factor, deal, trading_factor, cash_billions, doses, vaccinated) %>%
+  mutate(cash_billions = ifelse(cash_billions>20, 20, cash_billions)) %>%
+  gather("outcome","value",  -risk_factor,  -deal, -trading_factor, - vaccinated) %>%
+  mutate(outcome = factor(outcome, c("cash_billions", "doses"), c("Billion Euros", "Million doses"))) %>% 
+  ggplot(aes(risk_factor, value, color = trading_factor)) + facet_grid(outcome ~ deal, scales = "free_y") + geom_boxplot() + ylim(c(0, NA)) + theme_bw() + 
+  scale_y_continuous(trans='sqrt') + ylab(" ") + xlab("Mutation risk") 
+
+
+observation_plot()
+```
+
+
+Basic variation by vaccination status
+
+```{r}
+
+df %>% group_by(vaccinated) %>% 
+  summarize(median_cash = median(cash_billions),
+            mean_cash = mean(cash_billions),
+            median_doses = median(doses),
+            mean_doses = mean(doses),
+            )
+```
+
+```{r}
+main_results <- 
+  list(
+  cash = lm_robust(cash_billions ~ trading_importance*risk*others_number_norm*others_giving_norm  + round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy,
+  doses = lm_robust(doses ~ trading_importance*risk*others_number_norm*others_giving_norm  + round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy) %>% bind_rows()
+
+
+ treatments <- c("trading_importance", "risk", "others_number", "others_giving")
+ treatments_norm <- c("trading_importance", "risk", "others_number_norm", "others_giving_norm")
+
+ treatment_labels <- c("Trading importance", "Risk", "Number of others giving (10s)", "Amount given by others\n(10s of billions)")
+
+df %>% group_by(risk_factor) %>% summarize(
+  mean_c = mean(cash_billions), 
+  median_c = median(cash_billions),
+  mean_d = mean(doses), 
+  median_d = median(doses))
+
+#
+```
+
+# Descriptives
+
+The average proposal is: 
+`r round(mean(df$cash, na.rm = TRUE), 2)` billion Euros and 
+`r round(mean(df$doses, na.rm = TRUE), 2)` million doses. 
+
+The median proposal is: 
+`r round(median(df$cash_billions, na.rm = TRUE), 2)` billion Euros and 
+`r round(median(df$doses, na.rm = TRUE), 2)` million doses. 
+ 
+These are close to actual [https://www.auswaertiges-amt.de/en/aussenpolitik/themen/gesundheit/covax/2396914](pledges).
+
+
+The median in risk conditions is proposal is: 
+`r df %>% dplyr::filter(risk_factor=="High" & trading_factor == "High") %>% pull(cash_billions) %>% median(na.rm = TRUE) %>% round(2)` billion Euros and 
+`r df %>% dplyr::filter(risk_factor=="High" & trading_factor == "High") %>% pull(doses) %>% median(na.rm = TRUE) %>% round(2)` million doses. 
+
+```{r, out.width = "50%"} 
+figure_1 <-
+  
+  main_results %>% 
+  dplyr::filter(term %in% treatments_norm) %>% 
+  mutate(Treatment = factor(term, treatments_norm, treatment_labels),
+         outcome = factor(outcome, c("cash_billions", "doses"), c("Cash (billion Euros)", "Doses (Millions)"))) %>%
+  
+  ggplot(aes(estimate, Treatment)) + geom_point()+
+  geom_errorbar(aes(xmin = conf.low, xmax = conf.high), width = .1)+
+  geom_vline(xintercept=0, linetype="longdash", lwd=0.35, colour = "#B55555") + 
+  theme_bw() + facet_grid(~outcome, scales = "free_x")+
+  ylab("")
+
+
+df_mean <- df %>% 
+  group_by(risk_factor) %>% 
+  summarize(average = mean(cash_billions, na.rm = TRUE)) %>%
+  ungroup() 
+
+figure_2 <-
+  df %>% 
+  ggplot(aes(risk_factor, cash_billions)) + 
+  geom_boxplot() + ylab("Billions of Euros")   + xlab("Risk")  + scale_y_sqrt() +
+  geom_point(data = df_mean,
+             mapping = aes(x = risk_factor, y = average),
+             color="red") 
+
+figure_3 <-
+  df %>% 
+  ggplot(aes(risk_factor, doses)) + 
+  geom_boxplot() + ylab("Millions of doses") + xlab("Risk")
+
+figure_2
+figure_3
+```
+
+Note that the doses options was limited to between 0 and 200 m. 
+
+
+Offers are responsive to risk and economic impacts but not much to coordination considerations.
+
+```{r}
+
+figure_1
+
+pdf("2_output/E1_main.pdf", width = 6, height = 3)
+figure_1
+dev.off()
+```
+
+
+Trading importance and risk are substitutes for cash but not doses.
+
+Without demeaning:
+
+```{r}
+lm_robust(cash_billions ~ trading_factor*risk_factor+ round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+```
+
+Logging helps and substitution not as strong:
+
+```{r}
+lm_robust(log(cash_billions+1) ~ trading_factor*risk_factor+ round, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+
+```
+
+## Full results from saturated models
+
+```{r}
+main_results %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+```
+
+
+## Experiment
+
+```{r}
+outcomes <- c("solidarity_behaviour", "solidarity_attitude")
+outcome_labels <- c("Solidarity Bahaviour", "Solidarity Attitude")
+w2_treatments <- c("treatment_video")
+w2_treatment_labels <- c("Treatment")
+```
+
+
+```{r, results = "asis"}
+#r, child = "2_main_results.Rmd", eval = TRUE}
+# put in separate files later
+
+df_2 <- dplyr::filter(main_df, wave == 2)
+
+
+# df_2$solidarity_bahaviour %>% 
+#  hist(main = "Distribution of allocations from behavioral measure")
+
+
+
+df_2 %>%
+  ggplot(aes(factor(party_id), solidarity_behaviour)) + geom_boxplot()
+  
+  ggtitle("Distribution of allocations from behavioral measure")
+
+stargazer::stargazer(
+  lm(solidarity_behaviour ~ treatment_video, data = df_2), 
+  lm(solidarity_attitude ~ treatment_video, data = df_2), 
+  header = FALSE, type = "latex")
+
+models_basic <- lapply(c(outcomes), function(y)
+lm_robust(as.formula(paste(y, "~",   paste(w2_treatments, collapse =  "+"))), data = df_2))
+names(models_basic) <- outcomes
+
+
+figure_video <- 
+  lapply(models_basic, tidy) %>% bind_rows(.id = "outcome") %>%
+  dplyr::filter(term != "(Intercept)") %>%
+  mutate(outcome = factor(outcome, outcomes, outcome_labels)) %>% 
+  ggplot(aes(estimate, outcome)) + geom_point() +
+  #facet_grid(~outcome) +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high), position = position_dodge(width = 0.3), width = .1)+
+  theme_bw()+
+  #ylab("Change in support for regime (0-1)") +
+    geom_vline(xintercept=0, linetype="longdash", lwd=0.35, size=0.75,alpha=0.3, colour = "#B55555")  +
+    xlab("") + ylab("")  +
+    theme(#panel.grid.major = element_blank(),
+          #panel.grid.minor = element_blank(),
+          #panel.background = element_blank(),
+          #strip.background = element_blank(),
+          # strip.text.y = element_blank(),
+          #axis.text.y=element_blank(),
+          legend.position = "top",
+          text = element_text(size=20),
+          legend.title=element_blank(),
+          strip.text.y = element_text(angle = 180),
+          axis.ticks.y=element_blank()) +
+    scale_color_grey()
+
+
+figure_video
+
+```
+
+## Longer term follow up
+
+
+```{r}
+
+table(df$ID %in% df_2$ID)
+
+df <- left_join(df, df_2 %>% dplyr::select(ID, treatment_video))
+
+lm_robust(log(cash_billions+1) ~ trading_factor*risk_factor+ treatment_video + round,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+
+```
+
+
+## Individual solidarity
+
+Should an older Indian woman be prioritized over a young German?
+
+```{r}
+## Prioritization analysis
+
+main_df <- df %>% mutate( 
+    de_de_preference  = perspective_fed_german - perspective_fed_indian, # DE Preference for German 25
+#    who_de_preference  = perspective_who_german - perspective_who_indian # WHO Preference for German 25
+)
+
+main_df %>% group_by(wave) %>%
+  summarize(
+    priority_de_indian = mean(perspective_fed_indian),
+    priority_de_german = mean(perspective_fed_german),
+ #   priority_who_indian = mean(perspective_who_indian),
+#    priority_who_german = mean(perspective_who_german),
+    de_ind_preference  = mean(perspective_fed_german <= perspective_fed_indian),
+    de_ind_preference2  = mean(perspective_fed_german < perspective_fed_indian),
+    de_ind_preference3  = mean(perspective_fed_german == perspective_fed_indian),
+ #   who = mean(who_de_preference, na.rm = TRUE),
+ #   who_priority = mean(who_de_preference>0, na.rm = TRUE)
+    ) %>% t
+
+# about 57% of Germans think that a German 25 year old should be at least as high a priority as an Indian 65 year old
+#  22% think the same for WHO priortization 
+
+M <- lm_robust(cash_billions_log ~  perspective_fed_german + perspective_fed_indian, data = df)
+M$r.squared
+
+plot(df$cash_billions_log, df$perspective_fed_indian)
+
+
+```
+
+
+```{r}
+
+hist(df$perspective_fed_german - df$perspective_fed_indian)
+
+lm_robust(log(cash_billions+1) ~ trading_factor*risk_factor+ treatment_video + round + perspective_fed_german +perspective_fed_indian,  se_type = "stata", data = df) %>% tidy  %>% 
+  kbl(digit =2) %>%
+  kable_minimal()
+
+```
+
+
+## Structural
+
+
+```{r}
+structural_results <- 
+  lm_robust(cash_billions ~ trading_importance + risk + others_average, fixed_effects = ~id,  se_type = "stata", data = df) %>% tidy 
+
+gamma <- structural_results$estimate[3] / (1- structural_results$estimate[3])
+beta  <- 2*(1+gamma)*structural_results$estimate[1]
+delta  <- 2*(1+gamma)*structural_results$estimate[2]
+
+gamma_lwr <- structural_results$conf.low[3] / (1- structural_results$conf.low[3])
+gamma_upr <- structural_results$conf.high[3] / (1- structural_results$conf.high[3])
+
+b <- seq(structural_results$conf.low[3], structural_results$conf.high[3], length = 10)
+b/(1-b)
+
+pars <- c(gamma = gamma, beta = beta, delta = delta, gamma_lwr = gamma_lwr, gamma_upr = gamma_upr)
+```
+
+
+## Observational data
+
+```{r}
+owd <- read.csv("1_input/owid-covid-data.csv")
+
+ small_owd <- owd %>% 
+   dplyr::filter(date == "2021-10-20" & continent != "") %>% 
+   select(iso_code, location, gdp_per_capita, population, people_fully_vaccinated_per_hundred, total_deaths_per_million, total_vaccinations) %>% 
+   left_join(
+     owd %>% dplyr::filter(date == "2021-04-05" & continent != "") %>%
+       select(iso_code, location, total_deaths_per_million) %>%
+       rename(historical_deaths_per_million = total_deaths_per_million))
+ 
+ small_owd$total_vaccinations %>% sum(na.rm = TRUE)
+ 
+ table(small_owd$people_fully_vaccinated_per_hundred %>% is.na)
+ 
+r2_gdp <- lm_robust(
+  people_fully_vaccinated_per_hundred ~  gdp_per_capita,
+  data = small_owd)$r.squared
+
+r2_deaths_1 <- lm_robust(
+  people_fully_vaccinated_per_hundred ~  total_deaths_per_million,
+  data = small_owd)$r.squared
+
+r2_deaths_0 <- lm_robust(
+  people_fully_vaccinated_per_hundred ~  historical_deaths_per_million,
+  data = small_owd)$r.squared
+
+c(r2_gdp, r2_deaths_1, r2_deaths_0)
+
+80000000000/ small_owd %>% dplyr::filter(gdp_per_capita > 27000) %>% pull(population) %>% sum
+
+pc <- 80000000000/ small_owd %>% dplyr::filter(gdp_per_capita > 27000) %>% pull(population) %>% sum
+
+small_owd <- small_owd %>% mutate(
+  bill = ifelse(gdp_per_capita > 27000, pc*population, 0)
+)
+
+small_owd %>% dplyr::filter(location == "Germany" | location == "United States" )
+```
+
+
+## Wave 2 conjoint
+
+
+```{r, results = "asis"}
+
+label <- "1_input/W2_exp3_vignettes_universe.dta" %>% 
+  read_dta() %>%  
+    mutate(vignr = as.numeric(vignr))
+
+
+label$vig_doses %>% table()
+
+
+conjoints <- 
+  
+  list(
+    conjoint1_1 =
+      df_2 %>%
+      mutate(vignr = as.numeric(c_0031_w2),
+             outcome = conjoint_choice1_exp3, rating = conjoint_rating1_exp3, contest = 1, candidate=1) %>%
+      select(ID, vignr, outcome, rating, contest, candidate),
+    
+  conjoint1_2 =
+      df_2 %>%
+      mutate(vignr = as.numeric(c_0032_w2),
+             outcome = conjoint_choice1_exp3, rating = conjoint_rating2_exp3, contest = 1, candidate=2) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
+
+    
+  conjoint2_1 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette3),
+             outcome = conjoint_choice2_exp3, rating = conjoint_rating3_exp3, contest = 2, candidate=1) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
+
+        
+    conjoint2_2 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette4),
+             outcome = conjoint_choice2_exp3, rating = conjoint_rating4_exp3, contest = 2, candidate=2) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
+
+            
+                conjoint3_1 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette5),
+             outcome = conjoint_choice3_exp3, rating = conjoint_rating5_exp3, contest = 3, candidate=1) %>%
+      select(ID, vignr, outcome, rating, contest, candidate), 
+
+                
+                    conjoint3_2 =
+      df_2 %>%
+      mutate(vignr = as.numeric(vignette6),
+             outcome = conjoint_choice3_exp3, 
+             rating = conjoint_rating6_exp3, contest = 3, candidate=2) %>%
+      select(ID, vignr, outcome, rating, contest, candidate) 
+                    
+) %>% bind_rows() %>%
+  mutate(outcome = ifelse(candidate ==1, as.numeric(outcome=="1"), as.numeric(outcome=="2"))) %>%
+  left_join(label) %>%
+  mutate(
+    doses = factor(
+      vig_doses, 0:3,
+      c("1 Million doses", "5 Million doses", "10 Million doses", "20 Million doses")),
+    share = factor(vig_dose_share, 0:3,
+      c("1 % of the vaccines", "5 % of the vaccines", "10 % of the vaccines", "20 % of the vaccines")),
+    number= factor(vig_countries, 0:2, c("20 countries", "80 countries", "160 countries")), 
+    economic_benefits= factor(vig_benefit_economic, 0:1, c("Without economic importance", "With economic importance")),
+    health_benefits=factor(vig_benefit_health, 0:1,  
+      c("No risk of infection", "Risk of infection"))) %>%
+  left_join(df_2 %>% dplyr::select(ID, treatment_video)) 
+
+# Normalizae data
+# Note that mean rating is removed
+conjoints_norm <- conjoints %>% 
+  mutate(doses_norm = vig_doses - mean(vig_doses),
+         number_norm = vig_countries - mean(vig_countries),
+         share_norm = vig_dose_share - mean(vig_dose_share),
+         economic_benefits = vig_benefit_economic - mean(vig_benefit_economic),
+         health_benefits = vig_benefit_health - mean(vig_benefit_health)) %>%
+  group_by(ID) %>% mutate(rating = rating - mean(rating)) %>% ungroup %>%
+  left_join(df_2 %>% dplyr::select(ID, treatment_video))
+
+
+models_interactions <-
+  list(
+    rating0 = lm_robust(rating ~  doses_norm*share_norm*number_norm*economic_benefits*health_benefits, data = conjoints_norm),
+    rating1 = lm_robust(rating ~  doses_norm*share_norm*number_norm*economic_benefits*health_benefits, data = conjoints_norm),
+    choice0 = lm_robust(outcome ~  doses_norm*share_norm*number_norm*economic_benefits*health_benefits, data = conjoints_norm),
+    choice1 = lm_robust(outcome ~  doses_norm*share_norm*number_norm*economic_benefits*health_benefits, data = conjoints_norm)
+  )
+
+
+models_treatments <-
+  list(
+    rating = lm_robust(rating ~  treatment_video*vig_doses + treatment_video*vig_dose_share + treatment_video*vig_countries + treatment_video*vig_benefit_economic + treatment_video*vig_benefit_health, 
+                        data = conjoints_norm),
+    choice = lm_robust(outcome ~  treatment_video*vig_doses + treatment_video*vig_dose_share + treatment_video*vig_countries + treatment_video*vig_benefit_economic + treatment_video*vig_benefit_health, 
+                        data = conjoints_norm)
+    )
+
+htmlreg(models_interactions)
+
+htmlreg(models_treatments)
+
+fileConn <- file("2_output/treatment_effects.tex")
+writeLines(texreg(models_treatments, float.pos = "h!", include.ci = FALSE, caption = "Effects of treatment on drivers of support for agreements. ",
+  custom.coef.map = list(
+    "(Intercept)" = "Constant (Average rating)",
+    "treatment_video" = "Video effect (given ungenerous agreement)",
+    "vig_doses" = "German contribution",
+    "vig_dose_share" = "German share",
+"vig_countries" = "Number of donors",
+"vig_benefit_economic" = "Economic benefits",
+"vig_benefit_health" = "Health benefits",
+"treatment_video:vig_doses" = "Video * Contribution",
+"treatment_video:vig_dose_share" = "Video * Share",
+"treatment_video:vig_countries" = "Video * Donors",
+"treatment_video:vig_benefit_economic" = "Video * Economics",
+"treatment_video:vig_benefit_health"= "Video * Health"
+    ), digits = 3), fileConn)
+close(fileConn)
+
+
+      
+```
+
+## amce
+
+```{r}
+amces <- 
+  conjoints %>% 
+  cj(rating ~ doses+share+number+ economic_benefits+health_benefits,
+            id =~ID)
+
+pdf("2_output/amces.pdf", width = 5, height = 4)
+ plot(amces) + theme(legend.position="none")
+dev.off()
+```
+
+
+## Notes
+
+These seem inconsistent but they really tap into different questions; they suggest preferences for small doses and suggest preferences that are not ver responsive to other conditions.  
+
+Number of states blows everything else out of the water. This is really about what types of deals does Germany want: Germans want deals to be multilateral with sharing. 
+
+Also the benefits conditions are conceptually muddled with numbers conditions.
+Note:
+
+* Regressions take numbers at face value despite uneven gaps
+* The economic result is  weird, is it possible there's backwards coding.
+
+
+
+## Save workspace
+
+```{r}
+save.image("Solidarity.Rdata")
+```
+
+
+```{r}
+owd <- read.csv("1_input/owid-covid-data.csv")  %>% 
+   dplyr::filter(date == "2021-10-20" & continent != "")
+
+DAC_countries <- c("Australia",  "Austria",  "Belgium",  "Canada", "Czechia",  "Denmark", "Finland",  "France", "Germany",  "Greece", "Hungary",  "Iceland", "Ireland", "Italy", "Japan",  "South Korea", "Luxembourg", "Netherlands",  "New Zealand", "Norway", "Poland", "Portugal", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "United Kingdom", "United States")
+
+owd <- owd %>% 
+  mutate(DAC = location %in%  DAC_countries,
+         share = ifelse(DAC, gdp_per_capita * population, 0),
+         share = share/sum(share),
+         amount = 63*share)
+
+owd %>% dplyr::filter(DAC) %>% select(location, share, amount) %>% kable()
+
+```
+
+
+## Structural
+
+we assume:
+
+$$ u =  (a + b*T + c*R) * \log(Y + x) - x^2 - g*(x - k*y)^2 + \epsilon_i$$
+
+where $T$ is trading importance, $R$ is health risk, $Y$ is total amount given by others and $y$ is average amount given by others
+
+Max:
+
+$$\frac{(a + b*T + c*R)}{ (Y + x)} - 2x - 2g*(x - k*y) = 0$$
+
+$$- 2(1+g)x^2- 2((1+g)Y + gky)x +(2gkyY+(a + bT + cR)) = 0$$
+
+```{r}
+
+u <- function(x, a, b, c, h, k, ZT, ZR, ZY, Zy)  
+  -((a + b*ZT + c*ZR) * log(ZY + x) - x^2 - h*(x - k*Zy)^2) 
+
+maxx <- function(a,b,c,g,k,ZT,ZR,ZY,Zy) 
+optim(par = 2, fn = u, a=a, b=b, c=c, h = g, k = k, ZT=ZT, ZR=ZR, ZY = ZY, Zy = Zy, method = "L-BFGS-B", lower = .001)$par
+
+u(.5,1,1,1,1,1,1,1,1,1)
+u(1,1,1,1,1,1,1,1,1,1)
+u(1.2,1,1,1,1,1,1,1,1,1)
+
+maxx(a=1,b=1,c=1,g=1, k=1,ZT=1,ZR=1,ZY=1,Zy=1)
+
+```
+
+Sample data
+
+```{r}
+n <- 100
+
+df_test <- 
+  fabricate(N = n, 
+            trading_importance = simple_ra(N), 
+            risk = simple_ra(N),
+            others_giving = 100 + 100*simple_ra(N), 
+            others_average = 10 + 10*simple_ra(N))
+
+df_test$x <- 
+sapply(1:n, function(i) maxx(a = 1, b = 1, c = 1, g = .1, k = 1, df_test$trading_importance[i], df_test$risk[i], df_test$others_giving[i], df_test$others_average[i])) + 
+  rnorm(n, 0, .2)
+plot(df_test$others_average, df_test$x)  
+```
+
+```{r}
+lik_x <- function(x, sigma, a,b,c,g,k,ZT,ZR,ZY,Zy) 
+      dnorm(x, maxx(a,b,c,g,k,ZT,ZR,ZY,Zy), sigma)
+
+# Define negative log likelihood as a function of parameters
+LL2  <- function(a,b,c,g,k, sigma) {
+    
+    R <- sapply(1:nrow(data), function(j)
+           lik_x(
+             data$x[j], 
+             sigma, a,b,c,g,k,
+           ZT = data$trading_importance[j],
+           ZR = data$risk[j],
+           ZY = data$others_giving[j],
+           Zy = data$others_average[j]))
+
+    -sum(log(R))
+  }
+  
+# Check
+data <- df_test
+LL2(a = 1, b = 1, c = 1, g = .1, k = 1, sigma = .05)
+LL2(a = 1, b = 1, c = 1, g = .1, k = 1, sigma = .1)
+LL2(a = 1, b = 1, c = 1, g = .1, k = 1, sigma = 1)
+
+  # Estimation
+  M <- bbmle::mle2(
+    LL2,
+    method = "L-BFGS-B",
+    #  optimizer = "nlminb",
+    start = list(a = 0, b = 0, c = 0, g = .1,  k = 1, sigma = 1),
+    lower = list(a = -10, b = -10, c = -10, g = .01, k = -10, sigma = .03),
+    upper = list(a = 10, b = 10, c = 10, g = 10, k = 10, sigma = 10))
+  
+  # Format output from estimation
+  out <- bbmle::coef(bbmle::summary(M)) %>% data.frame()
+  
+  names(out) <- c("estimate", "std.error", "statistic", "p.value")
+  
+  # Flag: Should be able to do better ci's than this
+  out %>% mutate(conf.low = estimate - 1.96*std.error, 
+                 conf.high = estimate + 1.96*std.error)
+
+
+
+```
+
+## Party support and migration background

@@ -1,0 +1,57 @@
+# install.packages("remotes")
+# remotes::install_github("macartan/CausalQueries")
+library(CausalQueries)
+library(parallel)
+library(tidyverse)
+
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = TRUE)
+
+depth = 5
+
+N <- 10
+numCores <- 4
+numChains <- 2
+data <- data.frame(
+  'Y'  = sample(0:1, N, .5),
+  'X1' = sample(0:1, N, .5),
+  'X2' = sample(0:1, N, .5),
+  'X3' = sample(0:1, N, .5),
+  'X5' = sample(0:1, N, .5)
+)
+statements <- lapply(2:(ncol(data)-1),
+                     function(i){
+                       paste(paste0(lapply(1:i, function(x) paste0('Y <- X',x,';'))), collapse ='')
+                     })
+models  <- lapply(statements, function(x) make_model(x, add_causal_types = F))
+parents <- lapply(models, function(x) unique(x$dag$parent))
+combs   <- lapply(parents, function(x) combn(length(x), 2))
+params  <- lapply(combs, function(x) ncol(x):1) %>%
+  unlist() %>%
+  cbind(rep(1:length(combs), times = lapply(combs, ncol))) %>%
+  split(seq(nrow(.)))
+# using mclapply, which might allow for nested parallelisation
+(results <- mclapply(params[1:depth], # limited to small models to check because of time to complete
+                     function(x) {
+                       print(x)
+                       model1   <- models[[x[2]]]
+                       parents1 <- parents[[x[2]]]
+                       comb1    <- combs[[x[2]]]
+                       for (i in 1:x[1]){
+                         model1 <- set_restrictions(
+                           model1,
+                           c(interacts(X1 = parents1[comb1[1,i]],
+                                       X2 = parents1[comb1[2,i]],
+                                       Y  = 'Y')))
+                       }
+                       start <- Sys.time()
+                       model1 <- model1 %>%
+                         set_priors(distribution = "jeffreys") %>%
+                         update_model(data,
+                                      refresh = 1000,
+                                      iter = 4000,
+                                      chains = numChains)
+                       time <- Sys.time() - start
+                       c(Y_NYs = length(model1$nodal_types$Y), start = start, time  = as.numeric(time))
+                     }, mc.cores = numChains*depth) %>% bind_rows())
+write_rds(results, paste0("results_", depth, ".rds")

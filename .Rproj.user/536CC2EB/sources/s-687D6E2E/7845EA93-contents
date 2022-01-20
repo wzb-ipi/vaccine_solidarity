@@ -1,0 +1,217 @@
+---
+title: "Vaccine solidarity"
+author:
+ - Ferdinand Geißler, Humboldt
+ - Felix Hartmann, Humboldt
+ - Macartan Humphreys, WZB and Columbia
+ - Heike Klüver, Humboldt
+ - Johannes Giesecke, Humboldt
+date: "9/8/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(knitr)
+library(tidyverse)
+library(DeclareDesign)
+```
+
+```{r, include = FALSE, message = FALSE}
+load("Solidarity.RData")
+```
+
+
+# Questions
+
+## Questions
+
+* What is the willingness to share $ and vaccines with countries in need
+* Is willingness driven by:
+  * Strategic considerations (home benefits)
+  * Strategic considerations (global collective actions problems)
+  * Non-strategic considerations (humanitarian concerns)
+* Is willingness sensitive to interventions?
+  
+## Answers
+
+* Relatively high willingness to share: average $ willingness is "enough"; median is somewhat short of this
+* Concerns over economic and health implications for Germany matter, on the margin
+* Collective action considerations less prominent
+* Humanitarian considerations seem central
+* Willingness is sensitive to interventions
+
+
+# Background
+
+## Needs
+
+* *Massive* global inequity in distributions
+* Health and especially economic implications for global south countries is very large
+* Not only morally problematic but strategically short sighted given *global* health and economic risks
+
+
+## Who is vaccinated?
+
+Country distributions by wealth 
+
+```{r, warning = FALSE}
+
+small_owd %>% ggplot(aes(gdp_per_capita, people_fully_vaccinated_per_hundred))  + geom_point() + xlab("GDP per capita") + ylim(NA, 100) + ylab("% vaccinated")
+```
+
+
+## Who is vaccinated?
+
+Country distributions by burden
+
+```{r, warning = FALSE}
+small_owd %>% ggplot(aes(total_deaths_per_million, people_fully_vaccinated_per_hundred))  + geom_point() + xlab("Deaths / million") + ylim(NA, 100) + ylab("% vaccinated") 
+```
+
+
+## Ballpark Numbers
+
+* Vaccines needed: 10 - 12 billion (6b made; 5bn needed) (WHO)
+* Cash needed, ca 70 - 150 billion 
+* ACT-Accelerator strategy calls for US$ 23.4 for most at risk
+
+* German ODA: US$28.4 billion in 2020  (OECD DAC)
+* Global costs: $9 trillion (Agarwall et al), additional: $ 5.3 trillion (Unicef)
+
+<!-- https://www.unicef.org/press-releases/new-act-accelerator-strategy-calls-us-234-billion-international-investment-solve -->
+
+* German "fair share" ca $5b (OECD/Care approach)
+* German COVAX contribution $1b
+* Future needs unknown given mutation risks
+
+# Design
+
+## Dimensions
+
+$2 \times 2 \times 5$ factorial design:
+
+
+**Two costs dimensions**
+
+* *Settings* in which there are public health benefits  for Germany
+* *Settings* in which there are economic growth implications for Germany. 
+
+e.g. "Say it were known that rhe risk of new mutations of the coronavirus increases considerably in Germany if there are no vaccinations in poorer countries"
+
+## Dimensions
+
+$2 \times 2 \times 5$ factorial design:
+
+**Two coordination dimensions**
+
+Imagine settings in which:
+
+* 0 / 20 / 40 countries took part, 
+* contributing collectively  0 / 20 /  40 billion euros
+
+## Dimensions
+
+Note: 
+
+* There is no attempt to *alter beliefs* about costs or coordination.
+* These are *conditional questions*
+
+
+## Design
+
+```{r treatment, echo=FALSE, fig.cap="Variants", out.width = '80%', fig.align = 'center'}
+knitr::include_graphics("Figures/Experiment_82.png")
+```
+
+## Framing
+
+Subjects are asked about amounts of vaccines that Germany should share
+and financial contributions Germany should make in each condition.
+
+Outcome 1:
+
+>	The total costs to meet global vaccination needs amount to around 70
+	billion euros. 
+	
+> A contribution from Germany of one billion euros to this
+	fund would cost the population in Germany the equivalent of around 12
+	euros per person.
+	
+> For each of the two scenarios, please indicate how many euros Germany
+	should contribute to this fund for global vaccination. (Options range
+	from 0 to 70 billion; Millions can be specified, separated by commas
+	(e.g.~0.1 billion for 100 million))
+
+
+
+## Framing
+
+Subjects are asked about amounts of vaccines that Germany should share
+and financial contributions Germany should make in each condition.
+
+Outcome 2:
+
+> 	Germany will still have around 200 million vaccine doses available  by the end of the year. If Germany wanted to offer all of its citizens a third vaccination, Germany would have to reserve around 70 million of these vaccine doses.
+
+# Results
+
+## Main results
+
+```{r, echo = FALSE}
+supports
+```
+
+
+## Main results
+
+```{r, echo = FALSE}
+figure_1
+```
+
+* Note complementarity in giving and invariance to numbers of other countries
+
+## Treatment effects
+
+A video treatment exposed 50% of subjects (in wave 2) to information on the global health gains from global vaccine distribution.
+
+Attitudinal and behavioral outcome (donate share of earnings to  UNICEF; approx share of $1)
+
+
+## Treatment effects
+
+
+```{r, echo = FALSE}
+figure_video
+```
+
+## Direct evidence for humanitarian concern?
+
+We ask subjects to indicate how much a young German woman and an older Indian woman should be prioritized for vaccinations.
+
+We think strategic considerations dominate for the German woman, but humanitarian considerations for the Indian woman.
+
+## Direct evidence for humanitarian concern?
+
+```{r}
+hist(df$perspective_fed_german - df$perspective_fed_indian, xlab = "Relative prioritization of Indian woman", main = "")
+```
+
+# Discussion
+
+## Caveats
+
+* methodological caveat regarding framing; plausibly quite sensitive to this
+
+* methodological caveat regarding hypotheticals; not a field setting and so in a sense only as good as respondents' imaginations
+
+## Substantive
+
+* Benefits from major investments likely much higher than traditional ODA; regardless, excellent value for money
+
+* Germany is contributing well *comparatively* but can do more
+
+* Bottom line is that levels of generosity and willingness to engage are quite high: the political support is there
+
+* Paper focuses on dollars and doses but other strsategies also: sharing intellectual property and know-how
+

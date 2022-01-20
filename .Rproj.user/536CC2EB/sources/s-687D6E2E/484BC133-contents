@@ -1,0 +1,44 @@
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{l c c}
+\hline
+ & rating & choice \\
+\hline
+Constant (Average rating)                 & $0.172^{***}$  & $0.529^{***}$  \\
+                                          & $(0.028)$      & $(0.007)$      \\
+Video effect (given ungenerous agreement) & $-0.190^{***}$ & $-0.044^{***}$ \\
+                                          & $(0.041)$      & $(0.010)$      \\
+German contribution                       & $-0.101^{***}$ & $-0.030^{***}$ \\
+                                          & $(0.009)$      & $(0.002)$      \\
+German share                              & $-0.097^{***}$ & $-0.022^{***}$ \\
+                                          & $(0.009)$      & $(0.002)$      \\
+Number of donors                          & $0.165^{***}$  & $0.058^{***}$  \\
+                                          & $(0.012)$      & $(0.003)$      \\
+Economic benefits                         & $-0.209^{***}$ & $-0.053^{***}$ \\
+                                          & $(0.020)$      & $(0.005)$      \\
+Health benefits                           & $0.133^{***}$  & $0.036^{***}$  \\
+                                          & $(0.020)$      & $(0.005)$      \\
+Video * Contribution                      & $0.060^{***}$  & $0.020^{***}$  \\
+                                          & $(0.013)$      & $(0.003)$      \\
+Video * Share                             & $0.020$        & $0.002$        \\
+                                          & $(0.013)$      & $(0.003)$      \\
+Video * Donors                            & $0.095^{***}$  & $0.019^{***}$  \\
+                                          & $(0.017)$      & $(0.004)$      \\
+Video * Economics                         & $-0.011$       & $-0.008$       \\
+                                          & $(0.028)$      & $(0.007)$      \\
+Video * Health                            & $-0.048$       & $-0.014^{*}$   \\
+                                          & $(0.028)$      & $(0.007)$      \\
+\hline
+R$^2$                                     & $0.015$        & $0.021$        \\
+Adj. R$^2$                                & $0.015$        & $0.021$        \\
+Num. obs.                                 & $82692$        & $82692$        \\
+RMSE                                      & $2.033$        & $0.495$        \\
+\hline
+\multicolumn{3}{l}{\scriptsize{$^{***}p<0.001$; $^{**}p<0.01$; $^{*}p<0.05$}}
+\end{tabular}
+\caption{Effects of treatment on drivers of support for agreements. }
+\label{table:coefficients}
+\end{center}
+\end{table}
+

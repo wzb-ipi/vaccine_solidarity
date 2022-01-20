@@ -1,0 +1,79 @@
+"0","library(""haven"")"
+"0","knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, comment=NA)"
+"0","options(qwraps2_markup = ""markdown"")"
+"0",""
+"0","## Packages"
+"0","if (!require(pacman)) install.packages(""pacman"")"
+"0",""
+"0","pacman::p_load("
+"0","  lfe,        # "
+"0","  pid,"
+"0","  ggpubr,     # plot arrange"
+"0","  gridExtra,"
+"0","  modelsummary,"
+"0","  ggridges,    # plot"
+"0","  cregg,       # conjoint"
+"0","  readxl,      # read excel"
+"0","  gtrendsR,    # google trends"
+"0","  aod,         # hypothesis testing (1.3.1)"
+"0","  broom.helpers,# tidy regression"
+"0","  gtsummary,"
+"0","  car,         # linear hypothesis testing for causal tree (3.0-2)"
+"0","  corrplot,    # Correlations (0.84)"
+"0","  DeclareDesign, "
+"0","  dplyr,       # Data manipulation (0.8.0.1)"
+"0","  evtree,      # evolutionary learning of globally optimal trees (1.0-7)"
+"0","  fastDummies,"
+"0","  fBasics,     # Summary statistics (3042.89)"
+"0","  ggplot2,"
+"0","  ggforce,     # plot  "
+"0","  grf,         # Generalized random forests (0.10.2)"
+"0","  haven,       # load sav"
+"0","  kableExtra,  # Prettier RMarkdown (1.0.1)"
+"0","  knitr,"
+"0","  labelled,"
+"0","  psych,       # Correlation p-values (1.8.12)"
+"0","  purrr,"
+"0","  rpart,       # Classification and regression trees, or CART (4.1-13)"
+"0","  reshape2,"
+"0","  rpart.plot,  # Plotting trees (3.0.6)"
+"0","  readr,       # Reading csv files (1.3.1)"
+"0","  sjlabelled,"
+"0","  stats,"
+"0","  summarytools,"
+"0","  texreg,"
+"0","  tidyverse,"
+"0","  tidyselect,"
+"0","  tidyr,       # Database operations (0.8.3)"
+"0","  tidycat,     # tidy with categorical variables"
+"0","  tidymodels,"
+"0","  treeClust,   # Predicting leaf position for causal trees (1.1-7)"
+"0","  tibble)      # Modern alternative to data frames (2.1.1)"
+"2","Installing package into ‘C:/Users/macar/Documents/R/win-library/4.1’
+(as ‘lib’ is unspecified)
+"
+"2","Warning:"
+"2"," unable to access index for repository https://cran.rstudio.com/src/contrib:
+  cannot open URL 'https://cran.rstudio.com/src/contrib/PACKAGES'
+"
+"2","Warning:"
+"2"," unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/src/contrib:
+  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/src/contrib/PACKAGES'
+"
+"2","Warning:"
+"2"," package ‘tidymodels’ is not available for this version of R
+
+A version of this package for your version of R might be available elsewhere,
+see the ideas at
+https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
+"
+"2","Warning:"
+"2"," unable to access index for repository https://cran.rstudio.com/bin/windows/contrib/4.1:
+  cannot open URL 'https://cran.rstudio.com/bin/windows/contrib/4.1/PACKAGES'
+"
+"2","Warning:"
+"2"," unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1:
+  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1/PACKAGES'
+"
+"2","Error: Bioconductor version cannot be validated; no internet connection?
+"

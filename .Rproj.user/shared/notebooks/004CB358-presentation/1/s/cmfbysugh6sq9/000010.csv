@@ -1,0 +1,5 @@
+"0","small_owd %>% ggplot(aes(gdp_per_capita, people_fully_vaccinated_per_hundred))  + geom_point() + xlab(""GDP per capita"") + ylim(NA, 100) + ylab(""% vaccinated"")
+"
+"2","Warning:"
+"2"," Removed 129 rows containing missing values (geom_point).
+"
