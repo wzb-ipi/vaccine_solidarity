@@ -421,7 +421,7 @@ df %>% group_by(risk_factor) %>% summarize(
 # Results
 
 The average proposal is: 
-`r round(mean(df$cash, na.rm = TRUE), 2)` billion Euros and 
+`r round(mean(df$cash_billions, na.rm = TRUE), 2)` billion Euros and 
 `r round(mean(df$doses, na.rm = TRUE), 2)` million doses. 
 
 The median proposal is: 
@@ -620,11 +620,8 @@ df_2 %>% group_by(treatment_video) %>%
             median = median(solidarity_behaviour,na.rm = TRUE),
             share_min = mean(solidarity_behaviour == 0, na.rm = TRUE),
             share_max = mean(solidarity_behaviour == 1, na.rm = TRUE)) %>%
-  kable(booktabs = TRUE)
+  kable(booktabs = TRUE, caption = "Summaries of offers")
 
-mean(df_2$solidarity_behaviour,na.rm = TRUE)
-median(df_2$solidarity_behaviour,na.rm = TRUE)
-# most common 0.4 (3): 20 Mingle Points keep 45 Mingle Points donate
 
 df_2 %>%
   ggplot( aes(x = solidarity_behaviour, fill= factor(treatment_video))) + 
@@ -682,30 +679,14 @@ figure_video
 
 ```
 
-## Longer term follow up
-
-```{r}
-
-table(df$ID %in% df_2$ID)
-
-df <- left_join(df, df_2 %>% dplyr::select(ID, treatment_video))
-
-lm_robust(log(cash_billions+1) ~ trading_factor*risk_factor+ treatment_video + round,  se_type = "stata", data = df) %>% tidy  %>% 
-  kbl(digit =2) %>%
-  kable_minimal()
-
-lm_robust(cash_billions ~ trading_factor + risk_factor*treatment_video,  se_type = "stata", data = df) %>% tidy  %>% 
-  kbl(digit =2) %>%
-  kable_minimal()
-
-```
-
-
 # Individual solidarity
 
 Should an older Indian woman be prioritized over a young German?
 
 ```{r}
+
+df <- left_join(df, df_2 %>% dplyr::select(ID, treatment_video))
+
 ## Prioritization analysis
 
 main_df <- main_df %>% mutate( 
@@ -833,23 +814,6 @@ lik_x <- function(x, sigma, a,b,c,g,k,ZT,ZR,ZY,Zy)
       dnorm(x, maxx(a,b,c,g,k,ZT,ZR,ZY,Zy), sd = sigma)
 
 
-# Define negative log likelihood as a function of parameters
-# LL  <- function(a=1,b=1,c=1,g=1,k=1, sigma=1, data) {
-#     
-#     R <- with(data, 
-#           lik_x(x, 
-#              sigma, 
-#              a, b, c, g, k,
-#              ZT = trading_importance,
-#              ZR = risk,
-#              ZY = others_giving,
-#              Zy = others_average))
-# 
-#     -sum(log(R))
-#   }
-#   
-# LL2  <- function(...) LL(..., data = df_test)
-
 
 # Estimation
 
@@ -950,10 +914,6 @@ writeLines(
 close(fileConn)
 
 
-# https://cran.r-project.org/web/packages/FENmlm/vignettes/FENmlm.html
-# library(FENmlm)   
-#result_NL = femlm(z~0, base, NL.fml = ~ log(a*x + b*y), NL.start = list(a=1, b=1), lower = list(a=0, b=0))
-# result_NL_fe = femlm(z_bis~0|id, base, NL.fml = ~ log(2*x + b*y), NL.start = list(b=1), lower = list(b=0))
 
 ```
 
