@@ -92,7 +92,7 @@ deal_labels = c("No deal"=0, "20 give 20 bn"=1, "40 give 20b"=2,
 #   'Treatment: Abkommen, 40 Länder, 40 Milliarden'=4)
 
 
-main_df <- read_csv('1_input/combined.csv') %>% 
+main_df <- read_csv('1_input/Merge_W1_W2_W3_W4_renamed.csv') %>% 
   # Why is there "CDU.CSU" double?
   mutate(party = factor(party_id, 1:9, c("CDU.CSU", "CDU.CSU", "SPD", "AFD", "Greens", "FDP", "Left", "Other", "No party"))) %>%
   group_by(ID) %>% 
@@ -123,14 +123,14 @@ vign_values <-
 df <- 
   list(
     w4 %>%
-      mutate(vignr = as.numeric(run1_exp8)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(exp8_run1)) %>% left_join(vign_values) %>%
       mutate(round = 1,
          cash = 	exp7_money1,
          doses = exp7_doses1) %>%
       select(group, round, cash, doses, trading_importance, risk, deal, ID, perspective_fed_indian, perspective_fed_german, vaccinated, party, migration_background),
     
     w4 %>%
-      mutate(vignr = as.numeric(run2_exp8)) %>% left_join(vign_values) %>%
+      mutate(vignr = as.numeric(exp8_run2)) %>% left_join(vign_values) %>%
       mutate(round = 2,
          cash = 	exp7_money2,
          doses =  exp7_doses2) %>%
@@ -967,43 +967,43 @@ conjoints <-
   list(
     conjoint1_1 =
       df_2 %>%
-      mutate(vignr = as.numeric(c_0031_w2),
-             outcome = conjoint_choice1_exp3, rating = conjoint_rating1_exp3, contest = 1, candidate=1) %>%
+      mutate(vignr = as.numeric(exp3_vignette.1),
+             outcome = exp3_choice.1, rating = exp3_rating.1, contest = 1, candidate=1) %>%
       select(ID, vignr, outcome, rating, contest, candidate),
     
   conjoint1_2 =
       df_2 %>%
-      mutate(vignr = as.numeric(c_0032_w2),
-             outcome = conjoint_choice1_exp3, rating = conjoint_rating2_exp3, contest = 1, candidate=2) %>%
+      mutate(vignr = as.numeric(exp3_vignette.2),
+             outcome = exp3_choice.1, rating = exp3_rating.2, contest = 1, candidate=2) %>%
       select(ID, vignr, outcome, rating, contest, candidate), 
 
     
   conjoint2_1 =
       df_2 %>%
-      mutate(vignr = as.numeric(vignette3),
-             outcome = conjoint_choice2_exp3, rating = conjoint_rating3_exp3, contest = 2, candidate=1) %>%
+      mutate(vignr = as.numeric(exp3_vignette.3),
+             outcome = exp3_choice.2, rating = exp3_rating.3, contest = 2, candidate=1) %>%
       select(ID, vignr, outcome, rating, contest, candidate), 
 
         
     conjoint2_2 =
       df_2 %>%
-      mutate(vignr = as.numeric(vignette4),
-             outcome = conjoint_choice2_exp3, rating = conjoint_rating4_exp3, contest = 2, candidate=2) %>%
+      mutate(vignr = as.numeric(exp3_vignette.4),
+             outcome = exp3_choice.2, rating = exp3_rating.4, contest = 2, candidate=2) %>%
       select(ID, vignr, outcome, rating, contest, candidate), 
 
             
                 conjoint3_1 =
       df_2 %>%
-      mutate(vignr = as.numeric(vignette5),
-             outcome = conjoint_choice3_exp3, rating = conjoint_rating5_exp3, contest = 3, candidate=1) %>%
+      mutate(vignr = as.numeric(exp3_vignette.5),
+             outcome = exp3_choice.3, rating = exp3_rating.5, contest = 3, candidate=1) %>%
       select(ID, vignr, outcome, rating, contest, candidate), 
 
                 
                     conjoint3_2 =
       df_2 %>%
-      mutate(vignr = as.numeric(vignette6),
-             outcome = conjoint_choice3_exp3, 
-             rating = conjoint_rating6_exp3, contest = 3, candidate=2) %>%
+      mutate(vignr = as.numeric(exp3_vignette.6),
+             outcome = exp3_choice.3, 
+             rating = exp3_rating.6, contest = 3, candidate=2) %>%
       select(ID, vignr, outcome, rating, contest, candidate) 
                     
 ) %>% bind_rows() %>%
