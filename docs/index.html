@@ -16,7 +16,7 @@
 <meta name="author" content="Johannes Giesecke, Humboldt" />
 
 
-<title>Paper: Solidarity</title>
+<title>Public support for global vaccine sharing in the COVID-19 pandemic: Evidence from Germany: Replication file</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1806,7 +1806,8 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">Paper: Solidarity</h1>
+<h1 class="title toc-ignore">Public support for global vaccine sharing
+in the COVID-19 pandemic: Evidence from Germany: Replication file</h1>
 <h4 class="author">Ferdinand Geißler, Humboldt</h4>
 <h4 class="author">Felix Hartmann, Humboldt</h4>
 <h4 class="author">Macartan Humphreys, WZB and Columbia University</h4>
@@ -1817,6 +1818,8 @@ border-radius: 0px;
 </div>
 
 
+<p>The <code>.Rmd</code> file (code) for this replication file together
+with underlying data is available at: <a href="https://github.com/wzb-ipi/vaccine_solidarity" class="uri">https://github.com/wzb-ipi/vaccine_solidarity</a></p>
 <div id="setup" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Setup</h1>
 <pre class="r"><code>knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, comment=NA)
@@ -1994,8 +1997,7 @@ df_2  |&gt; write_rds(&quot;df_2.rds&quot;)
 <div id="numbers-provided-in-introduction-vaccine-background-data-from-owid" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Numbers provided in
 Introduction (Vaccine background data from OWID)</h1>
-<pre class="r"><code># owd &lt;- read.csv(&quot;1_input/owid-covid-data-20220104.csv&quot;)
-owd &lt;- read.csv(&quot;1_input/owid-covid-data-20221007.csv&quot;) 
+<pre class="r"><code>owd &lt;- read.csv(&quot;1_input/owid-covid-data-20221007.csv&quot;) 
 
 owd_world &lt;- filter(owd, location == &quot;World&quot;)
   
@@ -6428,8 +6430,6 @@ writeLines(texreg(models_treatments, float.pos = &quot;h!&quot;, include.ci = FA
 &quot;treatment_video:vig_benefit_health&quot;= &quot;Video * Health&quot;
     ), digits = 3), fileConn)
 close(fileConn)</code></pre>
-<pre class="r"><code># Save workspace
-save.image(&quot;Solidarity.Rdata&quot;)</code></pre>
 </div>
 </div>
 

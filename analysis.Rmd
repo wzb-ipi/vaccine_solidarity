@@ -1,5 +1,6 @@
 ---
-title: "Paper: Solidarity"
+title: "Public support for global vaccine sharing in the COVID-19
+pandemic: Evidence from Germany: Replication file"
 author:
  - Ferdinand Geißler, Humboldt
  - Felix Hartmann, Humboldt
@@ -26,6 +27,7 @@ editor_options:
   chunk_output_type: console
 ---
 
+The `.Rmd`  file (code) for this replication file together with underlying data is available at: https://github.com/wzb-ipi/vaccine_solidarity
 
 # Setup
 
@@ -1129,11 +1131,5 @@ close(fileConn)
 ```
 
 
-
-
-```{r}
-# Save workspace
-save.image("Solidarity.Rdata")
-```
 
 
